@@ -17,6 +17,7 @@ import java.lang.annotation.Target;
         "timeout: 트랜잭션 타임아웃(초) (기본값: 30)",
         "readOnly: 읽기 전용 트랜잭션 여부 (기본값: false)",
         "rollbackFor: 롤백할 예외 클래스 목록",
+        "noRollbackFor: 롤백하지 않을 예외 클래스 목록",
         "propagation: 트랜잭션 전파 방식 (기본값: REQUIRED)",
         "Spring의 @Transactional과 유사한 기능을 제공합니다."
     }
@@ -28,5 +29,6 @@ public @interface Transactional {
     int timeout() default 30;
     boolean readOnly() default false;
     Class<? extends Throwable>[] rollbackFor() default {};
+    String[] noRollbackFor() default {};
     String propagation() default "REQUIRED";
 } 

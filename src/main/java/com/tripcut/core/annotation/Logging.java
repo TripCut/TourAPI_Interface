@@ -27,8 +27,4 @@ public @interface Logging {
     boolean includeArgs() default true;
     boolean includeResult() default false;
     boolean includeExecutionTime() default true;
-
-    boolean logParameters();
-
-    boolean logResult();
 } 

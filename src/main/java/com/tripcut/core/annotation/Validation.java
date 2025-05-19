@@ -18,6 +18,7 @@ import java.lang.annotation.Target;
         "validateFormat: 형식 검증 여부 (기본값: false)",
         "format: 검증할 형식 (날짜, 이메일 등)",
         "customValidator: 커스텀 검증기 클래스",
+        "requiredFields: 필수 필드 목록",
         "검증 실패 시 ValidationException이 발생합니다."
     }
 )
@@ -29,4 +30,5 @@ public @interface Validation {
     boolean validateFormat() default false;
     String format() default "";
     Class<?> customValidator() default void.class;
+    String[] requiredFields() default {};
 } 
