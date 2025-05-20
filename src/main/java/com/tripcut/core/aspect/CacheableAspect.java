@@ -1,42 +1,31 @@
 package com.tripcut.core.aspect;
 
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.tripcut.core.annotation.Cacheable;
 
+import lombok.RequiredArgsConstructor;
+
 @Aspect
 @Component
+@RequiredArgsConstructor
+@ConditionalOnProperty(name = "spring.data.redis.enabled", havingValue = "true")
 public class CacheableAspect {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public CacheableAspect(RedisTemplate<String, Object> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
-
-    @Around("@annotation(cacheable)")
-    public Object cacheAround(ProceedingJoinPoint joinPoint, Cacheable cacheable) throws Throwable {
-        String key = generateCacheKey(joinPoint, cacheable);
-        
-        if (!cacheable.refresh()) {
-            Object cachedValue = redisTemplate.opsForValue().get(key);
-            if (cachedValue != null) {
-                return cachedValue;
-            }
-        }
-
-        Object result = joinPoint.proceed();
-        redisTemplate.opsForValue().set(key, result, cacheable.ttl(), TimeUnit.SECONDS);
-        
-        return result;
+    @Around("@annotation(com.tripcut.core.annotation.Cacheable)")
+    public Object cache(ProceedingJoinPoint joinPoint) throws Throwable {
+        // Redis가 비활성화된 경우 메서드를 직접 실행
+        return joinPoint.proceed();
     }
 
     private String generateCacheKey(ProceedingJoinPoint joinPoint, Cacheable cacheable) {
