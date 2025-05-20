@@ -53,4 +53,9 @@ server:
 
 logging:
   level:
-    org.springframework.security: DEBUG 
+    org.springframework.security: DEBUG
+    com.tripcut: DEBUG
+  file:
+    name: /var/log/spring-boot/tripcut-api.log
+    max-size: 10MB
+    max-history: 7 
