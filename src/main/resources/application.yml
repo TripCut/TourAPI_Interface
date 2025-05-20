@@ -1,6 +1,6 @@
 jwt:
-  secret: your-256-bit-secret-key-here-must-be-at-least-32-characters
-  expiration: 86400000 # 24 hours in milliseconds
+  secret: uydRcRuRxXNOif8BrERtQb7aAteuzxqn
+  expiration: 86400000 # 24시간
 
 spring:
   security:
@@ -10,7 +10,7 @@ spring:
   application:
     name: tripcut-api
   datasource:
-    url: jdbc:h2:mem:tripcutdb
+    url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -24,20 +24,16 @@ spring:
       path: /h2-console
   data:
     redis:
+      enabled: false
       host: localhost
       port: 6379
-      password: # Redis 비밀번호가 있는 경우 설정
-      database: 0
-      timeout: 10000
-      lettuce:
-        pool:
-          max-active: 8
-          max-idle: 8
-          min-idle: 0
-          max-wait: -1
 
 fastapi:
   base-url: http://localhost:8000
 
 server:
-  port: 8080 
+  port: 8080
+
+logging:
+  level:
+    org.springframework.security: DEBUG 
