@@ -1,8 +1,6 @@
-jwt:
-  secret: uydRcRuRxXNOif8BrERtQb7aAteuzxqn
-  expiration: 86400000 # 24시간
-
 spring:
+  main:
+    allow-circular-references: true
   security:
     user:
       name: admin
@@ -25,8 +23,27 @@ spring:
   data:
     redis:
       enabled: false
-      host: localhost
-      port: 6379
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    export:
+      prometheus:
+        enabled: true
+
+jwt:
+  secret: uydRcRuRxXNOif8BrERtQb7aAteuzxqn
+  expiration: 86400000 # 24시간
 
 fastapi:
   base-url: http://localhost:8000
