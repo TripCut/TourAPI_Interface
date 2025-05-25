@@ -23,6 +23,26 @@ spring:
   data:
     redis:
       enabled: false
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+  quartz:
+    job-store-type: jdbc
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: TripCutScheduler
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.H2Delegate
+            tablePrefix: QRTZ_
+            isClustered: false
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 5
 
 management:
   endpoints:
@@ -55,6 +75,8 @@ logging:
   level:
     org.springframework.security: DEBUG
     com.tripcut: DEBUG
+    org.springframework.batch: DEBUG
+    org.quartz: DEBUG
   file:
     name: /var/log/spring-boot/tripcut-api.log
     max-size: 10MB
