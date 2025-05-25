@@ -1,4 +1,4 @@
-package com.tripcut.domain.user.dto;
+package com.tripcut.global.security.jwt.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

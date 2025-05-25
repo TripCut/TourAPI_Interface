@@ -11,11 +11,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.tripcut.domain.user.dto.LoginRequest;
-import com.tripcut.domain.user.dto.SignupRequest;
+import com.tripcut.global.security.jwt.dto.LoginRequest;
+import com.tripcut.global.security.jwt.dto.SignupRequest;
 import com.tripcut.domain.user.entity.User;
 import com.tripcut.domain.user.repository.UserRepository;
-import com.tripcut.global.security.JwtTokenProvider;
+import com.tripcut.global.security.jwt.aggregate.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 

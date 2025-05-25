@@ -1,4 +1,4 @@
-package com.tripcut.global.security;
+package com.tripcut.global.security.jwt.aggregate;
 
 import java.security.Key;
 import java.util.Date;

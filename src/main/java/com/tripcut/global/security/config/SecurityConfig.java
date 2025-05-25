@@ -1,4 +1,4 @@
-package com.tripcut.global.config;
+package com.tripcut.global.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.tripcut.global.security.JwtAuthenticationFilter;
+import com.tripcut.global.security.jwt.filter.JwtAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
 

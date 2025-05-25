@@ -1,4 +1,4 @@
-package com.tripcut.global.config;
+package com.tripcut.global.security.jwt.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

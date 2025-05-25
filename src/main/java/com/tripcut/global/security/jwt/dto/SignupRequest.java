@@ -1,4 +1,4 @@
-package com.tripcut.domain.user.dto;
+package com.tripcut.global.security.jwt.dto;
 
 import java.util.List;
 

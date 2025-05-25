@@ -1,4 +1,4 @@
-package com.tripcut.global.config;
+package com.tripcut.global.monitor.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
