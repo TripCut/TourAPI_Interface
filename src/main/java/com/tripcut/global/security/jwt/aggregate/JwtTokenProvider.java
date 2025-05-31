@@ -18,19 +18,31 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String jwtSecret;
     
-    @Value("${jwt.expiration}")
-    private long jwtExpiration;
+    @Value("${jwt.access-token.expiration}")
+    private long accessTokenExpiration;
+    
+    @Value("${jwt.refresh-token.expiration}")
+    private long refreshTokenExpiration;
     
     private Key getSigningKey() {
         return Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
     
-    public String generateToken(String username) {
+    public String generateAccessToken(String username) {
+        return generateToken(username, accessTokenExpiration, "ACCESS");
+    }
+    
+    public String generateRefreshToken(String username) {
+        return generateToken(username, refreshTokenExpiration, "REFRESH");
+    }
+    
+    private String generateToken(String username, long expiration, String tokenType) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpiration);
+        Date expiryDate = new Date(now.getTime() + expiration);
         
         return Jwts.builder()
                 .setSubject(username)
+                .claim("type", tokenType)
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(getSigningKey())
@@ -45,6 +57,16 @@ public class JwtTokenProvider {
                 .getBody();
         
         return claims.getSubject();
+    }
+
+    public String getTokenTypeFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        
+        return claims.get("type", String.class);
     }
     
     public boolean validateToken(String token) {
@@ -65,5 +87,13 @@ public class JwtTokenProvider {
             return bearerToken.substring(7);
         }
         return null;
+    }
+    
+    public long getAccessTokenExpiration() {
+        return accessTokenExpiration;
+    }
+    
+    public long getRefreshTokenExpiration() {
+        return refreshTokenExpiration;
     }
 } 
