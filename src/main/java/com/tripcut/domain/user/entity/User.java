@@ -28,22 +28,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Validation(validateNull = true, validateEmpty = true)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
-    @Validation(validateNull = true, validateEmpty = true)
     private String email;
 
     @Column(nullable = false)
-    @Validation(validateNull = true, validateEmpty = true)
     private String password;
 
     @Column(nullable = false)
-    @Validation(validateNull = true, validateEmpty = true)
     @MultiLanguage(supportedLanguages = {"ko", "en", "zh", "ja"})
     private String username;
 
