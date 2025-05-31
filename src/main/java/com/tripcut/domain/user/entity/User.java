@@ -16,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,11 +31,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private String username;
+
     private String preferredLanguage;
     
     @ElementCollection
@@ -51,4 +56,12 @@ public class User {
     
     @ElementCollection
     private List<String> badges = new ArrayList<>();
+
+    @Builder
+    public User(String email, String password, String username, String preferredLanguage) {
+        this.email = email;
+        this.password = password;
+        this.username = username;
+        this.preferredLanguage = preferredLanguage;
+    }
 } 
