@@ -6,10 +6,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tripcut.domain.user.service.AuthService;
 import com.tripcut.global.security.jwt.dto.LoginRequest;
 import com.tripcut.global.security.jwt.dto.LoginResponse;
 import com.tripcut.global.security.jwt.dto.SignupRequest;
-import com.tripcut.domain.user.service.AuthService;
+import com.tripcut.global.security.jwt.dto.TokenResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        String token = authService.login(request.getEmail(), request.getPassword());
-        return ResponseEntity.ok(new LoginResponse(token));
+        return authService.login(request.getEmail(), request.getPassword());
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenResponse> refreshToken(@RequestBody String refreshToken) {
+        return authService.refreshToken(refreshToken);
     }
 } 
