@@ -7,8 +7,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.tripcut.core.annotation.Logging;
+import com.tripcut.core.annotation.Metrics;
+import com.tripcut.core.annotation.Transactional;
 import com.tripcut.domain.user.entity.User;
 import com.tripcut.domain.user.repository.UserRepository;
 import com.tripcut.global.security.jwt.aggregate.JwtTokenProvider;
@@ -26,7 +28,9 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
+    @Transactional(readOnly = false)
+    @Logging(level = "INFO", includeArgs = true, includeResult = true)
+    @Metrics(name = "auth.register", tags = {"operation=register"})
     public ResponseEntity<?> registerUser(SignupRequest signupRequest) {
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity.badRequest().body("Email is already taken!");
@@ -44,6 +48,8 @@ public class AuthService {
         return ResponseEntity.ok("User registered successfully!");
     }
 
+    @Logging(level = "INFO", includeArgs = true)
+    @Metrics(name = "auth.login", tags = {"operation=login"})
     public ResponseEntity<LoginResponse> login(String email, String password) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(email, password)
@@ -65,6 +71,8 @@ public class AuthService {
         return ResponseEntity.ok(response);
     }
 
+    @Logging(level = "INFO", includeArgs = true)
+    @Metrics(name = "auth.refresh", tags = {"operation=refresh"})
     public ResponseEntity<TokenResponse> refreshToken(String refreshToken) {
         if (!tokenProvider.validateToken(refreshToken)) {
             return ResponseEntity.badRequest().build();

@@ -3,6 +3,8 @@ package com.tripcut.domain.user.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tripcut.core.annotation.MultiLanguage;
+import com.tripcut.core.annotation.Validation;
 import com.tripcut.domain.drama.entity.DramaReview;
 import com.tripcut.domain.location.entity.LocationReview;
 import com.tripcut.domain.stamp.entity.Stamp;
@@ -26,20 +28,26 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Validation(validateNull = true, validateEmpty = true)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
+    @Validation(validateNull = true, validateEmpty = true)
     private String email;
 
     @Column(nullable = false)
+    @Validation(validateNull = true, validateEmpty = true)
     private String password;
 
     @Column(nullable = false)
+    @Validation(validateNull = true, validateEmpty = true)
+    @MultiLanguage(supportedLanguages = {"ko", "en", "zh", "ja"})
     private String username;
 
+    @MultiLanguage(supportedLanguages = {"ko", "en", "zh", "ja"}, required = false)
     private String preferredLanguage;
     
     @ElementCollection
