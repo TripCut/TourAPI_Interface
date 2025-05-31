@@ -65,7 +65,10 @@ management:
 
 jwt:
   secret: uydRcRuRxXNOif8BrERtQb7aAteuzxqn
-  expiration: 86400000 # 24시간
+  access-token:
+    expiration: 1800000 # 30분
+  refresh-token:
+    expiration: 604800000  # 7일
 
 fastapi:
   base-url: http://localhost:8000
