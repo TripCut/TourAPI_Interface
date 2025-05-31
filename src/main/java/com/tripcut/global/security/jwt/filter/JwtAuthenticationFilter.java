@@ -2,14 +2,15 @@ package com.tripcut.global.security.jwt.filter;
 
 import java.io.IOException;
 
-import com.tripcut.global.security.jwt.aggregate.JwtTokenProvider;
-import com.tripcut.global.security.jwt.service.CustomUserDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.tripcut.global.security.jwt.aggregate.JwtTokenProvider;
+import com.tripcut.global.security.jwt.service.CustomUserDetailsService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,12 +30,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String token = jwtTokenProvider.resolveToken(request);
         
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            String username = jwtTokenProvider.getUsernameFromToken(token);
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-            Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (token != null) {
+            try {
+                if (jwtTokenProvider.validateToken(token)) {
+                    String username = jwtTokenProvider.getUsernameFromToken(token);
+                    String tokenType = jwtTokenProvider.getTokenTypeFromToken(token);
+
+                    if ("ACCESS".equals(tokenType)) {
+                        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("Cannot set user authentication: {}", e);
+            }
         }
         
         filterChain.doFilter(request, response);
