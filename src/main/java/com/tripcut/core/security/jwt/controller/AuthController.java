@@ -1,4 +1,4 @@
-package com.tripcut.global.security.jwt.controller;
+package com.tripcut.core.security.jwt.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tripcut.global.security.jwt.dto.LoginRequest;
-import com.tripcut.global.security.jwt.dto.LoginResponse;
-import com.tripcut.global.security.jwt.dto.SignupRequest;
+import com.tripcut.core.security.jwt.dto.LoginRequest;
+import com.tripcut.core.security.jwt.dto.LoginResponse;
+import com.tripcut.core.security.jwt.dto.SignupRequest;
 import com.tripcut.domain.user.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -27,7 +27,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        String token = authService.login(request.getEmail(), request.getPassword());
-        return ResponseEntity.ok(new LoginResponse(token));
+        return authService.login(request.getEmail(), request.getPassword());
     }
 } 

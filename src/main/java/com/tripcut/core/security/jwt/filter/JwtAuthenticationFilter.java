@@ -1,9 +1,9 @@
-package com.tripcut.global.security.jwt.filter;
+package com.tripcut.core.security.jwt.filter;
 
 import java.io.IOException;
 
-import com.tripcut.global.security.jwt.aggregate.JwtTokenProvider;
-import com.tripcut.global.security.jwt.service.CustomUserDetailsService;
+import com.tripcut.core.security.jwt.aggregate.JwtTokenProvider;
+import com.tripcut.core.security.jwt.service.CustomUserDetailsService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -1,4 +1,4 @@
-package com.tripcut.global.security.jwt.aggregate;
+package com.tripcut.core.security.jwt.aggregate;
 
 import java.security.Key;
 import java.util.Date;
@@ -17,17 +17,20 @@ public class JwtTokenProvider {
     
     @Value("${jwt.secret}")
     private String jwtSecret;
-    
-    @Value("${jwt.expiration}")
-    private long jwtExpiration;
+
+    @Value("${jwt.access-token.expiration}")
+    private long accessTokenExpiration;
+
+    @Value("${jwt.refresh-token.expiration}")
+    private long refreshTokenExpiration;
     
     private Key getSigningKey() {
         return Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
     
-    public String generateToken(String username) {
+    public String generateAccessToken(String username) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpiration);
+        Date expiryDate = new Date(now.getTime() + accessTokenExpiration);
         
         return Jwts.builder()
                 .setSubject(username)
@@ -35,6 +38,24 @@ public class JwtTokenProvider {
                 .setExpiration(expiryDate)
                 .signWith(getSigningKey())
                 .compact();
+    }
+
+    public String generateRefreshToken(String username) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + refreshTokenExpiration);
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(getSigningKey())
+                .compact();
+    }
+
+    public long getAccessTokenExpiration() {
+        return accessTokenExpiration;
+    }
+    public long getRefreshTokenExpiration() {
+        return refreshTokenExpiration;
     }
     
     public String getUsernameFromToken(String token) {

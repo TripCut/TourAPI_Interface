@@ -1,8 +1,5 @@
 package com.tripcut.domain.user.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,11 +8,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.tripcut.global.security.jwt.dto.LoginRequest;
-import com.tripcut.global.security.jwt.dto.SignupRequest;
+import com.tripcut.core.security.jwt.dto.LoginRequest;
+import com.tripcut.core.security.jwt.dto.SignupRequest;
 import com.tripcut.domain.user.entity.User;
 import com.tripcut.domain.user.repository.UserRepository;
-import com.tripcut.global.security.jwt.aggregate.JwtTokenProvider;
+import com.tripcut.core.security.jwt.aggregate.JwtTokenProvider;
+import com.tripcut.core.security.jwt.dto.LoginResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,10 +39,20 @@ public class AuthService {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok("User registered successfully!");
+        // 회원가입 후 바로 Access/Refresh 토큰 발급
+        String accessToken = tokenProvider.generateAccessToken(user.getEmail());
+        String refreshToken = tokenProvider.generateRefreshToken(user.getEmail());
+        LoginResponse response = new LoginResponse(
+            accessToken,
+            refreshToken,
+            "Bearer",
+            tokenProvider.getAccessTokenExpiration(),
+            tokenProvider.getRefreshTokenExpiration()
+        );
+        return ResponseEntity.ok(response);
     }
 
-    public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> authenticateUser(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 loginRequest.getEmail(),
@@ -53,20 +61,36 @@ public class AuthService {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.generateToken(String.valueOf(authentication));
-
-        Map<String, String> response = new HashMap<>();
-        response.put("token", jwt);
-        response.put("type", "Bearer");
-
+        String accessToken = tokenProvider.generateAccessToken(loginRequest.getEmail());
+        String refreshToken = tokenProvider.generateRefreshToken(loginRequest.getEmail());
+        LoginResponse response = new LoginResponse(
+            accessToken,
+            refreshToken,
+            "Bearer",
+            tokenProvider.getAccessTokenExpiration(),
+            tokenProvider.getRefreshTokenExpiration()
+        );
         return ResponseEntity.ok(response);
     }
 
-    public String login(String email, String password) {
+    public ResponseEntity<LoginResponse> login(String email, String password) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(email, password)
         );
-        
-        return tokenProvider.generateToken(authentication.getName());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String accessToken = tokenProvider.generateAccessToken(email);
+        String refreshToken = tokenProvider.generateRefreshToken(email);
+
+        LoginResponse response = new LoginResponse(
+            accessToken,
+            refreshToken,
+            "Bearer",
+            tokenProvider.getAccessTokenExpiration(),
+            tokenProvider.getRefreshTokenExpiration()
+        );
+
+        return ResponseEntity.ok(response);
     }
 } 
