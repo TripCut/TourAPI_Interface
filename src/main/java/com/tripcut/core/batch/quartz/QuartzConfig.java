@@ -1,4 +1,4 @@
-package com.tripcut.global.batch.quartz;
+package com.tripcut.core.batch.quartz;
 
 import javax.sql.DataSource;
 

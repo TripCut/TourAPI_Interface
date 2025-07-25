@@ -1,4 +1,4 @@
-package com.tripcut.middleware.service;
+package com.tripcut.core.service;
 
 import java.util.Map;
 

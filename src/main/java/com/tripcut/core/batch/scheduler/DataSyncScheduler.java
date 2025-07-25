@@ -1,4 +1,4 @@
-package com.tripcut.global.batch.scheduler;
+package com.tripcut.core.batch.scheduler;
 
 import org.quartz.*;
 import org.springframework.context.annotation.Configuration;

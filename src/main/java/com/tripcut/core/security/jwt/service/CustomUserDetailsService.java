@@ -1,4 +1,4 @@
-package com.tripcut.global.security.jwt.service;
+package com.tripcut.core.security.jwt.service;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

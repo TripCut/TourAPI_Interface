@@ -1,4 +1,4 @@
-package com.tripcut.global.batch.config;
+package com.tripcut.core.batch.config;
 
 import javax.sql.DataSource;
 

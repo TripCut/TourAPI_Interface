@@ -1,4 +1,4 @@
-package com.tripcut.middleware.config;
+package com.tripcut.core.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.tripcut.global.batch.job;
+package com.tripcut.core.batch.job;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
