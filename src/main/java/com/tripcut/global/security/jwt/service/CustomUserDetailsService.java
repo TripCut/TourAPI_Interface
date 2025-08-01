@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
             User admin = new User();
             admin.setEmail("admin@naver.com");
             admin.setPassword(passwordEncoder.encode("1234"));
-            admin.setUsername("Admin");
+            admin.setName("Admin");
             admin.setPreferredLanguage("ko");
             userRepository.save(admin);
         }
