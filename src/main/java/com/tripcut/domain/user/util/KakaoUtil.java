@@ -78,6 +78,7 @@ public class KakaoUtil {
             log.info(Arrays.toString(e.getStackTrace()));
             throw new AuthHandler(ErrorStatus._PARSING_ERROR);
         }
+
         return kakaoProfile;
     }
 }

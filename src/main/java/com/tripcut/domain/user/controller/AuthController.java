@@ -1,5 +1,6 @@
 package com.tripcut.domain.user.controller;
 
+//import com.tripcut.domain.user.dto.request.UserRequestDto;
 import com.tripcut.domain.user.dto.response.BaseResponse;
 import com.tripcut.domain.user.dto.response.UserResponseDto;
 import com.tripcut.domain.user.entity.User;
