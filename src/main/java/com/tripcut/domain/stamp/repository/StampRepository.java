@@ -13,9 +13,11 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
     
     List<Stamp> findByUserId(Long userId);
     
-    List<Stamp> findByLocationId(Long locationId);
+    @Query("SELECT A FROM Stamp A WHERE A.filmingLocation.id = :locationId")
+    List<Stamp> findByLocationId(@Param("locationId") Long locationId);
     
-    List<Stamp> findByUserIdAndLocationId(Long userId, Long locationId);
+    @Query("SELECT A FROM Stamp A WHERE A.user.id = :userId AND A.filmingLocation.id = :locationId")
+    List<Stamp> findByUserIdAndLocationId(@Param("userId") Long userId, @Param("locationId") Long locationId);
     
     @Query("SELECT A FROM Stamp A WHERE A.user.id = :userId AND A.filmingLocation.drama.id = :dramaId")
     List<Stamp> findByUserIdAndDramaId(@Param("userId") Long userId, @Param("dramaId") Long dramaId);
