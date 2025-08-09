@@ -1,0 +1,115 @@
+spring:
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+  application:
+    name: tripcut-api
+  
+  # 데이터베이스 설정 (MariaDB)
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://mariadb:3306/tripcut?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+    username: ${DB_USERNAME:tripcut}
+    password: ${DB_PASSWORD:tripcut!123}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 30000
+      initialization-fail-timeout: 60000
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+  
+  # H2 콘솔 비활성화 (MariaDB 사용)
+  h2:
+    console:
+      enabled: false
+  
+  # Redis 설정 (Docker 환경에서 활성화)
+  data:
+    redis:
+      enabled: true
+      host: redis
+      port: 6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 10
+          min-idle: 1
+  
+  # 배치 작업 설정 (단순화)
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: never
+  
+  # Quartz 스케줄러 설정 (메모리 전용)
+  quartz:
+    job-store-type: memory
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: TripCutScheduler
+            skipUpdateCheck: true
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 5
+            threadPriority: 5
+          jobStore:
+            class: org.quartz.simpl.RAMJobStore
+
+# 관리 엔드포인트 설정 (단순화)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+# JWT 설정
+jwt:
+  secret: ${JWT_SECRET:uydRcRuRxXNOif8BrERtQb7aAteuzxqn}
+  access-token:
+    expiration: ${JWT_ACCESS_EXPIRATION:1800000} # 30분
+  refresh-token:
+    expiration: ${JWT_REFRESH_EXPIRATION:604800000} # 7일
+
+# 외부 API 설정 제거
+
+# 서버 설정
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  tomcat:
+    max-threads: 200
+    min-spare-threads: 10
+
+# 로깅 설정
+logging:
+  level:
+    root: INFO
+    com.tripcut: DEBUG
+    org.springframework.security: INFO
+    org.springframework.batch: INFO
+    org.quartz: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: /var/log/spring-boot/tripcut-api.log
+    max-size: 50MB
+    max-history: 10

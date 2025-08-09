@@ -35,7 +35,6 @@ dependencies {
 
     implementation 'org.modelmapper:modelmapper:3.2.0'
 
-    implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
@@ -53,4 +52,41 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// Docker 빌드 최적화 설정
+jar {
+    enabled = false
+    archiveClassifier = ''
+}
+
+bootJar {
+    enabled = true
+    archiveClassifier = ''
+    archiveFileName = 'tripcut-api.jar'
+    
+    // 실행 가능한 JAR 최적화
+    layered {
+        enabled = true
+    }
+}
+
+// Docker 이미지 빌드를 위한 태스크
+task dockerBuild(type: Exec) {
+    dependsOn bootJar
+    description = 'Build Docker image'
+    group = 'docker'
+    commandLine 'docker', 'build', '-t', 'tripcut-api:latest', '.'
+}
+
+task dockerRun(type: Exec) {
+    dependsOn dockerBuild
+    description = 'Run Docker container'
+    group = 'docker'
+    commandLine 'docker', 'run', '-p', '8080:8080', '--name', 'tripcut-api-container', 'tripcut-api:latest'
+}
+
+// 테스트 실행 시 시스템 속성 설정
+test {
+    systemProperty 'spring.profiles.active', 'test'
 }

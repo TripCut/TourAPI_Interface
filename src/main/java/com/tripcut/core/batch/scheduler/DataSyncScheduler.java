@@ -16,6 +16,12 @@ public class DataSyncScheduler {
 
     @PostConstruct
     public void init() {
+        // 배치가 비활성화된 경우 스케줄러도 비활성화
+        if (!isBatchEnabled()) {
+            log.info("배치가 비활성화되어 있어 스케줄러를 등록하지 않습니다.");
+            return;
+        }
+        
         try {
             JobDetail jobDetail = JobBuilder.newJob(DataSyncQuartzJob.class)
                     .withIdentity("dataSyncJob")
@@ -31,5 +37,11 @@ public class DataSyncScheduler {
         } catch (SchedulerException e) {
             log.error("데이터 동기화 스케줄러 등록 실패", e);
         }
+    }
+    
+    private boolean isBatchEnabled() {
+        // Spring Boot의 batch.job.enabled 속성을 확인
+        String batchEnabled = System.getProperty("spring.batch.job.enabled", "false");
+        return Boolean.parseBoolean(batchEnabled);
     }
 } 
