@@ -44,7 +44,7 @@ public class DramaConverter {
                 .id(review.getId())
                 .dramaId(review.getDrama().getId())
                 .userId(review.getUser().getId())
-                .userUsername(review.getUser().getUsername())
+                .userUsername(review.getUser().getName())
                 .title(review.getTitle())
                 .content(review.getContent())
                 .rating(review.getRating())

@@ -43,7 +43,7 @@ public class StampServiceImpl implements StampService {
                 .orElseThrow(() -> new RuntimeException("Location not found with id: " + stampDto.getLocationId()));
         
         // 이미 수집한 스탬프인지 확인
-        List<Stamp> existingStamps = stampRepository.findByUserIdAndLocationId(stampDto.getUserId(), stampDto.getLocationId());
+        List<Stamp> existingStamps = stampRepository.findByUser_IdAndFilmingLocation_Id(stampDto.getUserId(), stampDto.getLocationId());
         if (!existingStamps.isEmpty()) {
             throw new RuntimeException("Stamp already collected for this location");
         }
@@ -137,9 +137,9 @@ public class StampServiceImpl implements StampService {
     @Logging
     @Metrics(name = "")
     public Map<String, Object> getRallyProgress(Long userId, Long dramaId) {
-        Integer collectedStamps = getStampCountByUserIdAndDramaId(userId, dramaId);
+        Long collectedStamps = getStampCountByUserIdAndDramaId(userId, dramaId);
         Integer totalStamps = locationRepository.findByDramaId(dramaId).size();
-        Integer progressPercentage = totalStamps > 0 ? (collectedStamps * 100) / totalStamps : 0;
+        Long progressPercentage = totalStamps > 0 ? (collectedStamps * 100) / totalStamps : 0;
         
         Map<String, Object> progress = new HashMap<>();
         progress.put("userId", userId);
@@ -177,7 +177,7 @@ public class StampServiceImpl implements StampService {
     @Override
     @Logging
     @Metrics(name = "")
-    public Integer getStampCountByUserIdAndDramaId(Long userId, Long dramaId) {
+    public Long getStampCountByUserIdAndDramaId(Long userId, Long dramaId) {
         return stampRepository.getStampCountByUserIdAndDramaId(userId, dramaId);
     }
 
@@ -249,7 +249,7 @@ public class StampServiceImpl implements StampService {
                 .locationId(stamp.getFilmingLocation().getId())
                 .locationName(stamp.getFilmingLocation().getName())
                 .userId(stamp.getUser().getId())
-                .userUsername(stamp.getUser().getUsername())
+                .userUsername(stamp.getUser().getName())
                 .locationLatitude(stamp.getFilmingLocation().getLatitude())
                 .locationLongitude(stamp.getFilmingLocation().getLongitude())
                 .build();

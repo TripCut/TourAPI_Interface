@@ -1,50 +1,30 @@
 package com.tripcut.global.security.jwt.controller;
 
+import com.tripcut.global.security.jwt.TokenProvider;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.web.bind.annotation.*;
 
-import com.tripcut.core.annotation.Logging;
-import com.tripcut.core.annotation.Security;
-import com.tripcut.core.annotation.Validation;
-import com.tripcut.domain.user.service.AuthService;
-import com.tripcut.global.security.jwt.dto.LoginRequest;
-import com.tripcut.global.security.jwt.dto.LoginResponse;
-import com.tripcut.global.security.jwt.dto.SignupRequest;
-import com.tripcut.global.security.jwt.dto.TokenResponse;
+import java.util.Map;
 
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import static com.tripcut.global.common.api.ApiPath.BASE_URL;
+
 
 @RestController
-@RequestMapping("/api/auth")
-@RequiredArgsConstructor
+@RequestMapping(BASE_URL)
 public class AuthController {
-    private final AuthService authService;
+    private final TokenProvider tokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    @PostMapping("/signup")
-    @Logging(level = "INFO", includeArgs = true, includeResult = true)
-    @Security(roles = {"USER"}, requireAuth = false)
-    @Validation(validateNull = true, validateEmpty = true, requiredFields = {"email", "password", "username"})
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
-        return authService.registerUser(signupRequest);
+    public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
+        this.tokenProvider = tokenProvider;
+        this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
-
-    @PostMapping("/login")
-    @Logging(level = "INFO", includeArgs = true)
-    @Security(roles = {"USER"}, requireAuth = false)
-    @Validation(validateNull = true, validateEmpty = true, requiredFields = {"email", "password"})
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        return authService.login(request.getEmail(), request.getPassword());
-    }
-
     @PostMapping("/refresh")
-    @Logging(level = "INFO", includeArgs = true)
-    @Security(roles = {"USER"}, requireAuth = false)
-    @Validation(validateNull = true, validateEmpty = true)
-    public ResponseEntity<TokenResponse> refreshToken(@RequestBody String refreshToken) {
-        return authService.refreshToken(refreshToken);
+    public ResponseEntity<Map<String, String>> refreshToken(@RequestBody Map<String, String> request) {
+        String refreshToken = request.get("refreshToken");
+        String newAccessToken = tokenProvider.regenerateAccessToken(refreshToken);
+
+        return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
     }
-} 
+}

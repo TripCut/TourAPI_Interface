@@ -282,7 +282,7 @@ public class LocationServiceImpl implements LocationService {
                 .id(review.getId())
                 .locationId(review.getFilmingLocation().getId())
                 .userId(review.getUser().getId())
-                .userUsername(review.getUser().getUsername())
+                .userUsername(review.getUser().getName())
                 .title(review.getTitle())
                 .content(review.getContent())
                 .rating(review.getRating())

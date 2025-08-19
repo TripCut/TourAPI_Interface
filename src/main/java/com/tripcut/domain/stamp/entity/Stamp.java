@@ -29,7 +29,7 @@ public class Stamp {
     private Integer stampPoints;
 
     @ManyToOne
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "filming_location_id")
     private FilmingLocation filmingLocation;
 
     @ManyToOne

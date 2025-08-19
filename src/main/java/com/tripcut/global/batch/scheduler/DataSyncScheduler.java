@@ -32,4 +32,4 @@ public class DataSyncScheduler {
             log.error("데이터 동기화 스케줄러 등록 실패", e);
         }
     }
-} 
+}

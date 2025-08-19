@@ -12,16 +12,17 @@ import java.util.List;
 public interface StampRepository extends JpaRepository<Stamp, Long> {
     
     List<Stamp> findByUserId(Long userId);
-    
-    List<Stamp> findByLocationId(Long locationId);
-    
-    List<Stamp> findByUserIdAndLocationId(Long userId, Long locationId);
+
+    @Query("select s from Stamp s where s.filmingLocation.id = :locationId")
+    List<Stamp> findByLocationId(@Param("locationId") Long locationId);
+
+    List<Stamp> findByUser_IdAndFilmingLocation_Id(Long userId, Long locationId);
     
     @Query("SELECT A FROM Stamp A WHERE A.user.id = :userId AND A.filmingLocation.drama.id = :dramaId")
     List<Stamp> findByUserIdAndDramaId(@Param("userId") Long userId, @Param("dramaId") Long dramaId);
     
     @Query("SELECT COUNT(A) FROM Stamp A WHERE A.user.id = :userId AND A.filmingLocation.drama.id = :dramaId")
-    Integer getStampCountByUserIdAndDramaId(@Param("userId") Long userId, @Param("dramaId") Long dramaId);
+    Long getStampCountByUserIdAndDramaId(@Param("userId") Long userId, @Param("dramaId") Long dramaId);
     
     @Query("SELECT SUM(A.stampPoints) FROM Stamp A WHERE A.user.id = :userId")
     Integer getTotalPointsByUserId(@Param("userId") Long userId);

@@ -30,7 +30,15 @@ public interface FilmingLocationRepository extends JpaRepository<FilmingLocation
     
     @Query("SELECT A FROM FilmingLocation A JOIN A.tags tag WHERE tag IN :tags")
     List<FilmingLocation> findByTags(@Param("tags") List<String> tags);
-    
-    @Query("SELECT A FROM FilmingLocation A ORDER BY (SELECT AVG(B.rating) FROM LocationReview B WHERE B.filmingLocation = B) DESC")
+
+    @Query("""
+    SELECT A
+    FROM FilmingLocation A
+    ORDER BY (
+        SELECT COALESCE(AVG(B.rating), 0)
+        FROM LocationReview B
+        WHERE B.filmingLocation = A
+    ) DESC
+""")
     List<FilmingLocation> findAllOrderByAverageRating();
 } 

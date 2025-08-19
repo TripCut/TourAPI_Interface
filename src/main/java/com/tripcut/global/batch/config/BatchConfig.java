@@ -31,4 +31,4 @@ public class BatchConfig extends DefaultBatchConfiguration {
     protected String getTablePrefix() {
         return "BATCH_";
     }
-} 
+}

@@ -23,4 +23,4 @@ public class QuartzConfig {
         schedulerFactory.setOverwriteExistingJobs(true);
         return schedulerFactory;
     }
-} 
+}

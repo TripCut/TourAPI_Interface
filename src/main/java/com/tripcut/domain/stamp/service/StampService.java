@@ -22,7 +22,7 @@ public interface StampService {
     Map<String, Object> getRallyProgress(Long userId, Long dramaId);
     List<Map<String, Object>> getRallyProgressByDrama(Long userId);
     Integer getTotalPointsByUserId(Long userId);
-    Integer getStampCountByUserIdAndDramaId(Long userId, Long dramaId);
+    Long getStampCountByUserIdAndDramaId(Long userId, Long dramaId);
     
     // 스탬프 통계
     List<StampDto> getRecentStampsByUserId(Long userId, int limit);
