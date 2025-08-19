@@ -11,9 +11,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Stamp {
     @Id
@@ -27,7 +29,7 @@ public class Stamp {
     private Integer stampPoints;
 
     @ManyToOne
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "filming_location_id")
     private FilmingLocation filmingLocation;
 
     @ManyToOne

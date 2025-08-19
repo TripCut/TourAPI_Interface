@@ -82,7 +82,7 @@ public class TokenProvider implements InitializingBean {
 
       String refreshToken = Jwts.builder()
               .setSubject(authentication.getName())
-              .claim(AUTHORITIES_KEY, authorities)   // ✅ 추가
+              .claim(AUTHORITIES_KEY, authorities)
               .signWith(key, SignatureAlgorithm.HS512)
               .setExpiration(validity)
               .compact();

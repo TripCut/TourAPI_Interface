@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -34,4 +35,13 @@ public class Drama {
     
     @OneToMany(mappedBy = "drama", cascade = CascadeType.ALL)
     private List<DramaReview> reviews = new ArrayList<>();
+    
+    @Builder
+    public Drama(String title, String description, String genre, String broadcastYear, String broadcastStation) {
+        this.title = title;
+        this.description = description;
+        this.genre = genre;
+        this.broadcastYear = broadcastYear;
+        this.broadcastStation = broadcastStation;
+    }
 } 

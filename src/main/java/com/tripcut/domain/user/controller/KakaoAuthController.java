@@ -27,7 +27,7 @@ public class KakaoAuthController {
     @GetMapping("/api/auth/login/kakao")
     public String redirectToKakao() {
         return "redirect:" + "https://kauth.kakao.com/oauth/authorize"
-                + "?client_id=baf916b3a07072b8333ad4dd2c9481cc"
+                + "?client_id="
                 + "&redirect_uri=http://localhost:8080/auth/login/kakao"
                 + "&response_type=code";
     }
@@ -40,8 +40,8 @@ public class KakaoAuthController {
     ) {
         // 1. 요청 파라미터 만들기
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", "baf916b3a07072b8333ad4dd2c9481cc"); // REST API KEY
+        params.add("grant_type", "");
+        params.add("client_id", ""); // REST API KEY
         params.add("redirect_uri", "http://localhost:8080/auth/login/kakao");
         params.add("code", authorizeCode);
 
