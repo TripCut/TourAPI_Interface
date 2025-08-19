@@ -15,4 +15,6 @@ public class UserRequestDto {
     public static class UpdateUserDTO {
         private String name;
     }
+
+
 }

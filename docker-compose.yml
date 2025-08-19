@@ -72,4 +72,4 @@ networks:
     driver: bridge
 
 volumes:
-  grafana-storage: 
+  grafana-storage:

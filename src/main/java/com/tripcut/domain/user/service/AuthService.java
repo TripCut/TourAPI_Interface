@@ -1,8 +1,8 @@
 package com.tripcut.domain.user.service;
 
-import com.tripcut.domain.user.entity.User;
-import jakarta.servlet.http.HttpServletResponse;
+import com.tripcut.domain.user.dto.response.AuthLoginResult;
+import com.tripcut.domain.user.dto.response.KakaoTokenResponse;
 
 public interface AuthService {
-    User oAuthLogin(String accessCode, HttpServletResponse httpServletResponse);
+    AuthLoginResult kakaoLoginWithOAuthToken(KakaoTokenResponse tok);
 }

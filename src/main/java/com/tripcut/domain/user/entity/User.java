@@ -5,11 +5,15 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tripcut.domain.drama.entity.DramaReview;
 import com.tripcut.domain.location.entity.LocationReview;
 import com.tripcut.domain.stamp.entity.Stamp;
 
+import com.tripcut.global.security.jwt.entity.Authority;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,8 +26,13 @@ import lombok.*;
 @Builder
 public class User {
     @Id
+    @Column(name ="USER_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String memberId;
+
+    private String memberPw;
 
     private String name;
 
@@ -56,6 +65,15 @@ public class User {
 
     @Column(name = "UPDATED_AT", nullable = false)
     private String updatedAt;
+
+    @ManyToMany
+    @JoinTable(
+            name = "member_authority",
+            joinColumns = {@JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
+    @Schema(hidden = true)
+    @JsonIgnore
+    private Set<Authority> authorities;
 
     @PrePersist
     private void prePersist() {

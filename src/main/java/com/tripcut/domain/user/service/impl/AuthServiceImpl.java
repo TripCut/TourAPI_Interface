@@ -1,46 +1,49 @@
 package com.tripcut.domain.user.service.impl;
 
 import com.tripcut.domain.user.dto.KakaoDto;
+import com.tripcut.domain.user.dto.response.AuthLoginResult;
+import com.tripcut.domain.user.dto.response.KakaoTokenResponse;
 import com.tripcut.domain.user.entity.User;
 import com.tripcut.domain.user.repository.UserRepository;
 import com.tripcut.domain.user.service.AuthService;
 import com.tripcut.domain.user.util.AuthConverter;
-import com.tripcut.domain.user.util.JwtUtil;
 import com.tripcut.domain.user.util.KakaoUtil;
-import jakarta.servlet.http.HttpServletResponse;
+import com.tripcut.global.security.jwt.TokenProvider;
+import com.tripcut.global.security.jwt.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final KakaoUtil kakaoUtil;
     private final UserRepository userRepository;
-    private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final TokenProvider tokenProvider;
 
     @Override
-    public User oAuthLogin(String accessCode, HttpServletResponse httpServletResponse) {
-        KakaoDto.OAuthToken oAuthToken = kakaoUtil.requestToken(accessCode);
-        KakaoDto.KakaoProfile kakaoProfile = kakaoUtil.requestProfile(oAuthToken);
+    public AuthLoginResult kakaoLoginWithOAuthToken(KakaoTokenResponse tok) {
+        KakaoDto.KakaoProfile profile = kakaoUtil.requestProfileWithAccessToken(tok.getAccess_token());
 
-        Optional<User> queryUser = userRepository.findByEmail(kakaoProfile.getKakao_account().getEmail());
+        // 2) 유저 upsert
+        String email = profile.getKakao_account().getEmail();
+        String nickname = profile.getKakao_account().getProfile().getNickname();
+        User user = userRepository.findByEmail(email).orElseGet(() -> {
+            User u = AuthConverter.toUser(email, nickname, "1234", passwordEncoder);
+            return userRepository.save(u);
+        });
 
-        if (queryUser.isPresent()) {
-            User user = queryUser.get();
-            httpServletResponse.setHeader("Authorization", jwtUtil.createAccessToken(user.getEmail(), "ROLE_USER"));
-            return user;
-        } else {
-            User user = AuthConverter.toUser(kakaoProfile.getKakao_account().getEmail(),
-                    kakaoProfile.getKakao_account().getProfile().getNickname(),
-                    "1234",
-                    passwordEncoder);
-            userRepository.save(user);
-            httpServletResponse.setHeader("Authorization", jwtUtil.createAccessToken(user.getEmail(), String.valueOf(user.getRole())));
-            return user;
-        }
+
+        // 4) 우리 서비스 JWT 발급
+        String role = String.valueOf(user.getRole());
+        var authorities = java.util.List.of(new SimpleGrantedAuthority(role));
+        var authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), null, authorities);
+
+        TokenDto tokens = tokenProvider.createTokens(authentication);
+        return new AuthLoginResult(user, tokens.getAccessToken(), tokens.getRefreshToken());
     }
 }
