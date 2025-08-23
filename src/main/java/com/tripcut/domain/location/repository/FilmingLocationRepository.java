@@ -20,9 +20,9 @@ public interface FilmingLocationRepository extends JpaRepository<FilmingLocation
     List<FilmingLocation> findByAddressContaining(@Param("address") String address);
     
     @Query("SELECT A FROM FilmingLocation A WHERE " +
-           "6371 * acos(cos(radians(:latitude)) * cos(radians(A.latitude)) * " +
-           "cos(radians(A.longitude) - radians(:longitude)) + " +
-           "sin(radians(:latitude)) * sin(radians(A.latitude))) <= :radius")
+           "6371 * acos(cos(radians(:latitude)) * cos(radians(A.lat)) * " +
+           "cos(radians(A.lng) - radians(:longitude)) + " +
+           "sin(radians(:latitude)) * sin(radians(A.lat))) <= :radius")
     List<FilmingLocation> findByLocationWithinRadius(
             @Param("latitude") Double latitude,
             @Param("longitude") Double longitude,

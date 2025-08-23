@@ -16,13 +16,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class FilmingLocation {
     @Id
@@ -33,8 +33,8 @@ public class FilmingLocation {
     private String address;
     private String description;
     private String sceneDescription;
-    private Double latitude;
-    private Double longitude;
+    private Double lat;
+    private Double lng;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "drama_id")

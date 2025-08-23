@@ -57,13 +57,12 @@ public class SecurityConfig {
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers(
                                 "/api/v1/**", "/ws-stomp/**", "/swagger-ui/**",
-                                "/v3/api-docs/**", "/v3/api-docs", "/swagger-resources/**",
-                                "/webjars/**", "/api/v1/**", "/api/email/**", "/api/**"
+                                "/v3/api-docs/**", "/v3/api-docs", "/swagger-resources/**","/api/view",
+                                "/webjars/**", "/api/v1/**", "/api/email/**","/auth/login/kakao", "/auth/login/kakao"
                         ).permitAll()
 
-                        .requestMatchers("/auth/login/kakao", "/auth/login/kakao").permitAll()
 
-                        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+//                        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
 
                         .anyRequest().authenticated()
                 )

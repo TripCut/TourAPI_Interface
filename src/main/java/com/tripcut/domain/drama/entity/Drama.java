@@ -10,15 +10,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class Drama {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,18 +29,25 @@ public class Drama {
     private String broadcastYear;
     private String broadcastStation;
     
-    @OneToMany(mappedBy = "drama", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "drama", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FilmingLocation> filmingLocations = new ArrayList<>();
     
-    @OneToMany(mappedBy = "drama", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "drama", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DramaReview> reviews = new ArrayList<>();
-    
-    @Builder
-    public Drama(String title, String description, String genre, String broadcastYear, String broadcastStation) {
-        this.title = title;
-        this.description = description;
-        this.genre = genre;
-        this.broadcastYear = broadcastYear;
-        this.broadcastStation = broadcastStation;
+
+    public void addFilmingLocation(FilmingLocation loc) {
+        filmingLocations.add(loc);
+        loc.setDrama(this);
     }
+    public void removeFilmingLocation(FilmingLocation loc) {
+        filmingLocations.remove(loc);
+        loc.setDrama(null);
+    }
+    public void clearFilmingLocations() {
+        for (FilmingLocation loc : new ArrayList<>(filmingLocations)) {
+            removeFilmingLocation(loc);
+        }
+    }
+
+
 } 
