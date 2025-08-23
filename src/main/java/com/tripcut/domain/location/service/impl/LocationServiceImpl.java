@@ -44,8 +44,8 @@ public class LocationServiceImpl implements LocationService {
         location.setAddress(locationDto.getAddress());
         location.setDescription(locationDto.getDescription());
         location.setSceneDescription(locationDto.getSceneDescription());
-        location.setLatitude(locationDto.getLatitude());
-        location.setLongitude(locationDto.getLongitude());
+        location.setLat(locationDto.getLatitude());
+        location.setLng(locationDto.getLongitude());
         location.setDrama(drama);
         location.setImages(locationDto.getImages());
         location.setTags(locationDto.getTags());
@@ -86,8 +86,8 @@ public class LocationServiceImpl implements LocationService {
         location.setAddress(locationDto.getAddress());
         location.setDescription(locationDto.getDescription());
         location.setSceneDescription(locationDto.getSceneDescription());
-        location.setLatitude(locationDto.getLatitude());
-        location.setLongitude(locationDto.getLongitude());
+        location.setLat(locationDto.getLatitude());
+        location.setLng(locationDto.getLongitude());
         location.setImages(locationDto.getImages());
         location.setTags(locationDto.getTags());
         
@@ -265,8 +265,8 @@ public class LocationServiceImpl implements LocationService {
                 .address(location.getAddress())
                 .description(location.getDescription())
                 .sceneDescription(location.getSceneDescription())
-                .latitude(location.getLatitude())
-                .longitude(location.getLongitude())
+                .latitude(location.getLat())
+                .longitude(location.getLng())
                 .dramaId(location.getDrama().getId())
                 .dramaTitle(location.getDrama().getTitle())
                 .averageRating(averageRating)

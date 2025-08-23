@@ -1,6 +1,5 @@
 package com.tripcut.global.security.jwt;// package com.tripcut.global.security.jwt;
 
-import com.tripcut.global.security.jwt.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

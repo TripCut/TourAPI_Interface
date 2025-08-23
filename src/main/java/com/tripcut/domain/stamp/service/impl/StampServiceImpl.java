@@ -108,7 +108,7 @@ public class StampServiceImpl implements StampService {
         
         Double distance = calculateDistance(
                 userLatitude, userLongitude,
-                location.getLatitude(), location.getLongitude()
+                location.getLat(), location.getLng()
         );
         
         return distance <= maxDistance;
@@ -250,8 +250,8 @@ public class StampServiceImpl implements StampService {
                 .locationName(stamp.getFilmingLocation().getName())
                 .userId(stamp.getUser().getId())
                 .userUsername(stamp.getUser().getName())
-                .locationLatitude(stamp.getFilmingLocation().getLatitude())
-                .locationLongitude(stamp.getFilmingLocation().getLongitude())
+                .locationLatitude(stamp.getFilmingLocation().getLat())
+                .locationLongitude(stamp.getFilmingLocation().getLng())
                 .build();
     }
 }
