@@ -55,7 +55,7 @@ public class DramaServiceImpl implements DramaService {
 
     @Transactional
     @Override
-    public Page<DramaDto> list(Pageable pageable) {
+    public Page<DramaDto> dramaPage(Pageable pageable) {
         return dramaRepository.findAll(pageable)
                 .map(dramaConverter::convertToDto);
     }

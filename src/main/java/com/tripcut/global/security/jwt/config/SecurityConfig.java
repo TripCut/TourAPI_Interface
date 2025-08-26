@@ -58,7 +58,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/**", "/ws-stomp/**", "/swagger-ui/**",
                                 "/v3/api-docs/**", "/v3/api-docs", "/swagger-resources/**","/api/view",
-                                "/webjars/**", "/api/v1/**", "/api/email/**","/auth/login/kakao", "/auth/login/kakao"
+                                "/webjars/**", "/api/v1/**", "/api/email/**","/auth/login/kakao", "/auth/login/kakao",
+                                "/api/dramas/*/review"
                         ).permitAll()
 
 

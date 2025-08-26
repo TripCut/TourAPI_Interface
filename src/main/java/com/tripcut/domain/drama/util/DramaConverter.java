@@ -1,8 +1,7 @@
 package com.tripcut.domain.drama.util;
 
-import com.tripcut.domain.drama.constant.DramaConstants;
 import com.tripcut.domain.drama.dto.DramaDto;
-import com.tripcut.domain.drama.dto.DramaReviewDto;
+import com.tripcut.domain.drama.dto.DramaReviewCreateRequest;
 import com.tripcut.domain.drama.entity.Drama;
 import com.tripcut.domain.drama.entity.DramaReview;
 import com.tripcut.domain.drama.repository.DramaReviewRepository;
@@ -39,17 +38,17 @@ public class DramaConverter {
                 .build();
     }
 
-    public DramaReviewDto convertToReviewDto(DramaReview review) {
-        return DramaReviewDto.builder()
-                .id(review.getId())
-                .dramaId(review.getDrama().getId())
-                .userId(review.getUser().getId())
-                .userUsername(review.getUser().getName())
+    public DramaReviewCreateRequest convertToReviewDto(DramaReview review) {
+        return DramaReviewCreateRequest.builder()
+//                .id(review.getId())
+//                .dramaId(review.getDrama().getId())
+//                .userId(review.getUser().getId())
+//                .userUsername(review.getUser().getName())
                 .title(review.getTitle())
                 .content(review.getContent())
                 .rating(review.getRating())
-                .createdAt(review.getCreatedAt())
-                .updatedAt(review.getUpdatedAt())
+//                .createdAt(review.getCreatedAt())
+//                .updatedAt(review.getUpdatedAt())
                 .build();
     }
 
@@ -59,7 +58,7 @@ public class DramaConverter {
                 .collect(Collectors.toList());
     }
 
-    public List<DramaReviewDto> convertToReviewDtoList(List<DramaReview> reviews) {
+    public List<DramaReviewCreateRequest> convertToReviewDtoList(List<DramaReview> reviews) {
         return reviews.stream()
                 .map(this::convertToReviewDto)
                 .collect(Collectors.toList());
