@@ -44,7 +44,7 @@ public class DramaController {
             @RequestParam(required = false) String sort) {
 
             Pageable pageable = PageRequest.of(page, size, paginationSort.parseSort(sort));
-            return ResponseEntity.ok(dramaService.list(pageable));
+            return ResponseEntity.ok(dramaService.dramaPage(pageable));
     }
 
     @DeleteMapping("/{id}")

@@ -10,8 +10,6 @@ public interface DramaService {
     DramaDto create(DramaCreateRequest dramaCreateRequest);
     DramaDto update(Long id, DramaUpdateRequest dramaUpdateRequest);
     DramaDto read(Long id);
-
-    Page<DramaDto> list(Pageable pageable);
-
+    Page<DramaDto> dramaPage(Pageable pageable);
     void delete(Long id);
 }
