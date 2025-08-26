@@ -1,5 +1,6 @@
 package com.tripcut.domain.location.entity;
 
+import com.tripcut.domain.filmingLocation.entity.FilmingLocation;
 import com.tripcut.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;

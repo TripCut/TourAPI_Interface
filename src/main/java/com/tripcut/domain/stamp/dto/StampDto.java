@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StampDto {
-    private Long id;
     private String collectedAt;
     private String stampImage;
     private String stampType;

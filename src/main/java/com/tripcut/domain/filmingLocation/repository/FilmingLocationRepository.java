@@ -1,6 +1,8 @@
-package com.tripcut.domain.location.repository;
+package com.tripcut.domain.filmingLocation.repository;
 
-import com.tripcut.domain.location.entity.FilmingLocation;
+import com.tripcut.domain.filmingLocation.entity.FilmingLocation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,9 +12,19 @@ import java.util.List;
 
 @Repository
 public interface FilmingLocationRepository extends JpaRepository<FilmingLocation, Long> {
-    
-    List<FilmingLocation> findByDramaId(Long dramaId);
-    
+
+    Page<FilmingLocation> findByDrama_Id(Long dramaId, Pageable pageable);
+
+    Page<FilmingLocation> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
+
+    @Query("""
+           select distinct f
+           from FilmingLocation f
+             join f.tags t
+           where lower(t) = lower(:tag)
+           """)
+    Page<FilmingLocation> findByTag(String tag, Pageable pageable);
+
     @Query("SELECT A FROM FilmingLocation A WHERE A.name LIKE %:keyword% OR A.description LIKE %:keyword% OR A.sceneDescription LIKE %:keyword%")
     List<FilmingLocation> findByKeyword(@Param("keyword") String keyword);
     

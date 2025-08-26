@@ -1,33 +1,25 @@
 package com.tripcut.domain.stamp.service;
 
 import com.tripcut.domain.stamp.dto.StampDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Map;
 
 public interface StampService {
-    
-    // 스탬프 수집
-    StampDto collectStamp(StampDto stampDto);
-    StampDto getStampById(Long id);
-    List<StampDto> getStampsByUserId(Long userId);
-    List<StampDto> getStampsByLocationId(Long locationId);
-    List<StampDto> getStampsByDramaId(Long dramaId);
-    
-    // 위치 검증
-    Boolean validateLocation(Long locationId, Double userLatitude, Double userLongitude, Double maxDistance);
-    StampDto collectStampWithLocationValidation(StampDto stampDto, Double userLatitude, Double userLongitude);
-    
-    // 랠리 진행 상황 관리
-    Map<String, Object> getRallyProgress(Long userId, Long dramaId);
-    List<Map<String, Object>> getRallyProgressByDrama(Long userId);
-    Integer getTotalPointsByUserId(Long userId);
-    Long getStampCountByUserIdAndDramaId(Long userId, Long dramaId);
-    
-    // 스탬프 통계
-    List<StampDto> getRecentStampsByUserId(Long userId, int limit);
-    Map<String, Integer> getStampStatisticsByUserId(Long userId);
-    
-    // 스탬프 삭제
-    void deleteStamp(Long stampId);
+    StampDto collect(Long authUserId, StampDto req);
+
+    // 촬영지 전체 스탬프(모든 사용자)
+    Page<StampDto> listByLocation(Long filmingLocationId, Pageable pageable);
+
+    // 내 스탬프: 특정 촬영지
+    Page<StampDto> listMineByLocation(Long authUserId, Long filmingLocationId, Pageable pageable);
+
+    // 내 스탬프: 특정 드라마
+    List<StampDto> listMineByDrama(Long authUserId, Long dramaId);
+
+    // 내 진행도/집계
+    Long countMineByDrama(Long authUserId, Long dramaId);
+    Integer totalPointsMine(Long authUserId);
+    List<StampDto> recentMine(Long authUserId, int limit);
 }
