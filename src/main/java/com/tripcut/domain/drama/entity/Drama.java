@@ -3,7 +3,7 @@ package com.tripcut.domain.drama.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tripcut.domain.location.entity.FilmingLocation;
+import com.tripcut.domain.filmingLocation.entity.FilmingLocation;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

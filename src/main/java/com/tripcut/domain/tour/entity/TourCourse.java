@@ -3,7 +3,7 @@ package com.tripcut.domain.tour.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tripcut.domain.location.entity.FilmingLocation;
+import com.tripcut.domain.filmingLocation.entity.FilmingLocation;
 
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;

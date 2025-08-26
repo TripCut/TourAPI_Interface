@@ -1,10 +1,11 @@
-package com.tripcut.domain.location.entity;
+package com.tripcut.domain.filmingLocation.entity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.tripcut.domain.drama.entity.Drama;
 
+import com.tripcut.domain.location.entity.LocationReview;
 import com.tripcut.domain.stamp.entity.Stamp;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
