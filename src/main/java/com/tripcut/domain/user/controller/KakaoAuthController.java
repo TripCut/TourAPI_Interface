@@ -56,17 +56,17 @@ public class KakaoAuthController {
                 new HttpEntity<>(params, headers),
                 KakaoTokenResponse.class
         );
-        KakaoTokenResponse tok = response.getBody();
+        KakaoTokenResponse token = response.getBody();
 
-        // 2) 서비스에서 유저생성 + 우리 JWT 발급
-        var result = authService.kakaoLoginWithOAuthToken(tok);
+        AuthLoginResult result = authService.kakaoLoginWithOAuthToken(token);
 
-        // 3) 응답 바디로 토큰 반환
-        var body = new LoginResponse(
+        LoginResponse body = new LoginResponse(
                 UserConverter.toJoinResultDTO(result.getUser()),
                 result.getAccessToken(),
-                result.getRefreshToken()
+                result.getRefreshToken(),
+                result.getFirstLogin()
         );
+        System.out.println(body);
         return BaseResponse.onSuccess(body);
     }
 

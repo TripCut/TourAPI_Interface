@@ -25,15 +25,17 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
-    @Override
-    public AuthLoginResult kakaoLoginWithOAuthToken(KakaoTokenResponse tok) {
-        KakaoDto.KakaoProfile profile = kakaoUtil.requestProfileWithAccessToken(tok.getAccess_token());
 
-        // 2) 유저 upsert
+
+    @Override
+    public AuthLoginResult kakaoLoginWithOAuthToken(KakaoTokenResponse token) {
+        token.setFirst_login(false);
+        KakaoDto.KakaoProfile profile = kakaoUtil.requestProfileWithAccessToken(token.getAccess_token());
         String email = profile.getKakao_account().getEmail();
         String nickname = profile.getKakao_account().getProfile().getNickname();
         User user = userRepository.findByEmail(email).orElseGet(() -> {
             User u = AuthConverter.toUser(email, nickname, "1234", passwordEncoder);
+            token.setFirst_login(true);
             return userRepository.save(u);
         });
 
@@ -44,6 +46,6 @@ public class AuthServiceImpl implements AuthService {
         var authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), null, authorities);
 
         TokenDto tokens = tokenProvider.createTokens(authentication);
-        return new AuthLoginResult(user, tokens.getAccessToken(), tokens.getRefreshToken());
+        return new AuthLoginResult(user, tokens.getAccessToken(), tokens.getRefreshToken(), token.getFirst_login());
     }
 }
