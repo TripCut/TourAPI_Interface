@@ -10,4 +10,5 @@ public class AuthLoginResult {
     private final User user;
     private final String accessToken;
     private final String refreshToken;
+    private final Boolean firstLogin;
 }
