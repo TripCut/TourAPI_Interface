@@ -34,4 +34,4 @@ public class DataSyncQuartzJob extends QuartzJobBean {
             throw new JobExecutionException(e);
         }
     }
-} 
+}

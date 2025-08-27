@@ -1,6 +1,6 @@
 package com.tripcut.domain.stamp.entity;
 
-import com.tripcut.domain.location.entity.FilmingLocation;
+import com.tripcut.domain.filmingLocation.entity.FilmingLocation;
 import com.tripcut.domain.user.entity.User;
 
 import jakarta.persistence.Entity;
@@ -29,7 +29,7 @@ public class Stamp {
     private Integer stampPoints;
 
     @ManyToOne
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "filming_location_id")
     private FilmingLocation filmingLocation;
 
     @ManyToOne

@@ -20,4 +20,6 @@ public interface DramaReviewRepository extends JpaRepository<DramaReview, Long> 
     
     @Query("SELECT COUNT(dr) FROM DramaReview dr WHERE dr.drama.id = :dramaId")
     Integer getReviewCountByDramaId(@Param("dramaId") Long dramaId);
+
+    Boolean existsByDrama_IdAndUser_Id(Long dramaId, Long userId);
 } 
