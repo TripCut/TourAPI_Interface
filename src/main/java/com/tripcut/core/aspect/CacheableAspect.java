@@ -22,10 +22,25 @@ public class CacheableAspect {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    @Around("@annotation(com.tripcut.core.annotation.Cacheable)")
-    public Object cache(ProceedingJoinPoint joinPoint) throws Throwable {
-        // Redis가 비활성화된 경우 메서드를 직접 실행
-        return joinPoint.proceed();
+    @Around("@annotation(cacheable)")
+    public Object cache(ProceedingJoinPoint joinPoint, Cacheable cacheable) throws Throwable {
+        String cacheKey = generateCacheKey(joinPoint, cacheable);
+        
+        // 캐시에서 조회
+        Object cachedResult = redisTemplate.opsForValue().get(cacheKey);
+        if (cachedResult != null) {
+            return cachedResult;
+        }
+        
+        // 메서드 실행
+        Object result = joinPoint.proceed();
+        
+        // 결과를 캐시에 저장
+        if (result != null) {
+            redisTemplate.opsForValue().set(cacheKey, result, cacheable.ttl(), java.util.concurrent.TimeUnit.SECONDS);
+        }
+        
+        return result;
     }
 
     private String generateCacheKey(ProceedingJoinPoint joinPoint, Cacheable cacheable) {
