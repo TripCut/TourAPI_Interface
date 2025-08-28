@@ -19,6 +19,4 @@ public interface RedisService {
     void clearTokenHistory(String email);
 
     boolean isRedisAvailable();
-    void setFallbackMode(boolean enabled);
-    boolean isInFallbackMode();
 } 

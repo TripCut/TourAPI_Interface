@@ -1,12 +1,10 @@
 package com.tripcut.global.redis.config;
 
-import java.util.List;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -15,21 +13,24 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Configuration
-@ConfigurationProperties(prefix = "spring.data.redis.cluster")
+@ConfigurationProperties(prefix = "spring.data.redis")
 @Getter
 @Setter
-public class RedisClusterConfig {
-    private List<String> nodes;
+public class RedisConfig {
+    private String host = "localhost";
+    private int port = 6379;
     private String password;
-    private int maxRedirects;
+    private int database = 0;
     
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisClusterConfiguration clusterConfig = new RedisClusterConfiguration(nodes);
-        clusterConfig.setPassword(password);
-        clusterConfig.setMaxRedirects(maxRedirects);
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
+        if (password != null && !password.isEmpty()) {
+            config.setPassword(password);
+        }
+        config.setDatabase(database);
         
-        return new LettuceConnectionFactory(clusterConfig);
+        return new LettuceConnectionFactory(config);
     }
     
     @Bean
