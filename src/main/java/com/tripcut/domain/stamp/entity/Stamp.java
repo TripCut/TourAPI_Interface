@@ -3,12 +3,7 @@ package com.tripcut.domain.stamp.entity;
 import com.tripcut.domain.filmingLocation.entity.FilmingLocation;
 import com.tripcut.domain.user.entity.User;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "TBL_STAMP")
 public class Stamp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

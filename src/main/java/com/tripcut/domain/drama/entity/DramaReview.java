@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "TBL_DRAMA_REVIEW")
 public class DramaReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

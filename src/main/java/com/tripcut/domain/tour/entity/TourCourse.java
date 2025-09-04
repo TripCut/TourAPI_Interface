@@ -5,20 +5,14 @@ import java.util.List;
 
 import com.tripcut.domain.filmingLocation.entity.FilmingLocation;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "TBL_TOUR_COURSE")
 public class TourCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
