@@ -30,8 +30,9 @@ public interface LocationService {
 
     // 통계
     Double getAverageRating(Long locationId);
-    Integer getReviewCount(Long locationId);
+    Double getReviewCount(Long locationId);
 
     // 거리 계산
     Double calculateDistance(Double lat1, Double lon1, Double lat2, Double lon2);
+
 }

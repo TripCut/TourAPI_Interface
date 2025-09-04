@@ -20,5 +20,5 @@ public interface LocationReviewRepository extends JpaRepository<LocationReview, 
     Double getAverageRatingByLocationId(@Param("locationId") Long locationId);
     
     @Query("SELECT COUNT(A) FROM LocationReview A WHERE A.filmingLocation.id = :locationId")
-    Integer getReviewCountByLocationId(@Param("locationId") Long locationId);
+    Double getReviewCountByLocationId(@Param("locationId") Long locationId);
 } 
