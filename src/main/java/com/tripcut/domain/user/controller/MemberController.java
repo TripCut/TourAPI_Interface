@@ -76,4 +76,9 @@ public class MemberController {
 
         return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
     }
+    @GetMapping("/info")
+    public MemberDto readMyInfo(@RequestParam Long id){
+         return memberService.getMyInfo(id);
+    }
+
 }

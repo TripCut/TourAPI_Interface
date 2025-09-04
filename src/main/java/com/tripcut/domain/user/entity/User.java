@@ -45,8 +45,7 @@ public class User {
 
     private String preferredLanguage;
     
-    @ElementCollection
-    private List<String> preferredGenres = new ArrayList<>();
+    private String preferredGenres;
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<DramaReview> dramaReviews = new ArrayList<>();
@@ -56,9 +55,8 @@ public class User {
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Stamp> stamps = new ArrayList<>();
-    
-    @ElementCollection
-    private List<String> badges = new ArrayList<>();
+
+    private String badges;
 
     @Column(name = "CREATED_AT", nullable = false, updatable = false)
     private String createdAt;

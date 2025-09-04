@@ -18,8 +18,8 @@ public class MemberDto {
     private String email;
     private String role;
     private String preferredLanguage;
-    private List<String> preferredGenres;
-    private List<String> badges;
+    private String preferredGenres;
+    private String badges;
     private Set<String> authorities;
 
 
