@@ -33,7 +33,7 @@ public class ApiResponse<T> {
     @Nullable
     private ExceptionResponse error;
 
-    // Api 성공시 출력
+    // 성공 응답
     public static <T> ApiResponse<T> ok(T result) {
         return new ApiResponse<>(
                 HttpStatus.OK,
@@ -43,8 +43,8 @@ public class ApiResponse<T> {
         );
     }
 
-    // 에러 발생시의 출력 메시지
-    public static ApiResponse<Object> fail(CommonException e) {
+    // 공통 예외 응답
+    public static <T> ApiResponse<T> fail(CommonException e) {
         return new ApiResponse<>(
                 e.getErrorCode().getHttpStatus(),
                 false,
@@ -53,8 +53,8 @@ public class ApiResponse<T> {
         );
     }
 
-    // 400번 에러 처리(프론트엔드)
-    public static ApiResponse<Object> fail(final MissingServletRequestParameterException e) {
+    // 400 - 요청 파라미터 누락
+    public static <T> ApiResponse<T> fail(MissingServletRequestParameterException e) {
         return new ApiResponse<>(
                 HttpStatus.BAD_REQUEST,
                 false,
@@ -63,9 +63,10 @@ public class ApiResponse<T> {
         );
     }
 
-    public static ApiResponse<Object> fail(final MethodArgumentTypeMismatchException e) {
+    // 400 - 잘못된 파라미터 형식
+    public static <T> ApiResponse<T> fail(MethodArgumentTypeMismatchException e) {
         return new ApiResponse<>(
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.BAD_REQUEST,
                 false,
                 null,
                 ExceptionResponse.of(ErrorCode.INVALID_PARAMETER_FORMAT)
