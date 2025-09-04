@@ -1,5 +1,6 @@
 package com.tripcut.domain.user.controller;
 
+import com.tripcut.core.controller.BaseController;
 import com.tripcut.domain.user.dto.LoginDto;
 import com.tripcut.domain.user.dto.MemberDto;
 import com.tripcut.domain.user.service.MemberService;
@@ -25,7 +26,7 @@ import static com.tripcut.global.common.api.ApiPath.BASE_URL;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(BASE_URL + "/member")
-public class MemberController {
+public class MemberController extends BaseController {
     private final MemberService memberService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;

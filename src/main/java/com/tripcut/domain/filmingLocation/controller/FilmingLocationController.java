@@ -1,5 +1,6 @@
 package com.tripcut.domain.filmingLocation.controller;
 
+import com.tripcut.core.controller.BaseController;
 import com.tripcut.domain.filmingLocation.dto.FilmingLocationCreateRequest;
 import com.tripcut.domain.filmingLocation.dto.FilmingLocationDto;
 import com.tripcut.domain.filmingLocation.dto.FilmingLocationUpdateRequest;
@@ -11,10 +12,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.tripcut.global.common.api.ApiPath.BASE_URL;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/locations")
-public class FilmingLocationController {
+@RequestMapping(BASE_URL + "/filmingLocation")
+public class FilmingLocationController extends BaseController {
 
     private final FilmingLocationService filmingLocationService;
 

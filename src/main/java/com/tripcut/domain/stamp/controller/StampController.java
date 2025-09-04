@@ -1,5 +1,6 @@
 package com.tripcut.domain.stamp.controller;// package com.tripcut.domain.stamp.controller;
 
+import com.tripcut.core.controller.BaseController;
 import com.tripcut.domain.stamp.dto.StampDto;
 import com.tripcut.domain.stamp.service.StampService;
 import com.tripcut.domain.user.entity.User;
@@ -14,10 +15,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.tripcut.global.common.api.ApiPath.BASE_URL;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/stamps")
-public class StampController {
+@RequestMapping(BASE_URL + "/stamps")
+public class StampController extends BaseController {
 
     private final StampService stampService;
     private final UserRepository userRepository;

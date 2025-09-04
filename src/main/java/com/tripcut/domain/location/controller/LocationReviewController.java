@@ -1,5 +1,6 @@
 package com.tripcut.domain.location.controller;
 
+import com.tripcut.core.controller.BaseController;
 import com.tripcut.domain.location.dto.*;
 import com.tripcut.domain.location.service.LocationReviewService;
 import com.tripcut.domain.user.entity.User;
@@ -12,10 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import static com.tripcut.global.common.api.ApiPath.BASE_URL;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/locations")
-public class LocationReviewController {
+@RequestMapping(BASE_URL + "/locations")
+public class LocationReviewController extends BaseController {
 
     private final LocationReviewService reviewService;
     private final UserRepository userRepository;
