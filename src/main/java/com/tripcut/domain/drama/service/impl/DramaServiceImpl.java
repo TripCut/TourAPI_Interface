@@ -112,7 +112,6 @@ public class DramaServiceImpl implements DramaService {
         if (payloads == null || payloads.isEmpty()) return;
 
         for (T p : payloads) {
-            // 각각의 getter를 메서드 레퍼런스로 뽑아냅니다.
             String name     = (p instanceof DramaCreateRequest.FilmingLocationPayload c) ? c.getName()
                     : ((DramaUpdateRequest.FilmingLocationPayload) p).getName();
             String address  = (p instanceof DramaCreateRequest.FilmingLocationPayload c) ? c.getAddress()

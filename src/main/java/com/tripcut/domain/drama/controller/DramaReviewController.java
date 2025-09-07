@@ -3,6 +3,7 @@ package com.tripcut.domain.drama.controller;
 import com.tripcut.core.controller.BaseController;
 import com.tripcut.domain.drama.dto.DramaReviewDto;
 import com.tripcut.domain.drama.dto.DramaReviewUpdateRequest;
+import com.tripcut.domain.drama.entity.DramaReview;
 import com.tripcut.domain.user.entity.User;
 import com.tripcut.domain.drama.dto.DramaReviewCreateRequest;
 import com.tripcut.domain.drama.service.DramaReviewService;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.tripcut.global.common.api.ApiPath.BASE_URL;
 
@@ -59,5 +62,12 @@ public class DramaReviewController extends BaseController {
     ) {
         dramaReviewService.delete(reviewId, userId);
         return ResponseEntity.ok("삭제 완료");
+    }
+
+    @GetMapping("/reviews/{dramaId}")
+    public List<DramaReviewDto> readReviews(
+            @PathVariable Long dramaId
+    ){
+        return dramaReviewService.getAllReviews(dramaId);
     }
 }
