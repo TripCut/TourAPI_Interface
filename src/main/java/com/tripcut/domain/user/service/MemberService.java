@@ -75,9 +75,10 @@ public class MemberService {
 //        parameters.put("memberNo", memberNo);
 //        return memberMapper.findByMemberId(parameters);
 //    }
-    public MemberDto getMyInfo(Long id){
-        MemberDto memberDto = UserRepository.findById(id);
-        return memberDto;
-    }
+//    public MemberDto getMyInfo(Long id){
+//        MemberDto memberDto = UserRepository.findById(id)
+//                .map(memberDto)
+//        return memberDto;
+//    }
 
 }

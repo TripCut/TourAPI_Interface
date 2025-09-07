@@ -1,5 +1,6 @@
 package com.tripcut.domain.drama.controller;
 
+import com.tripcut.core.controller.BaseController;
 import com.tripcut.domain.drama.dto.DramaReviewDto;
 import com.tripcut.domain.drama.dto.DramaReviewUpdateRequest;
 import com.tripcut.domain.user.entity.User;
@@ -12,10 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import static com.tripcut.global.common.api.ApiPath.BASE_URL;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/dramas")
-public class DramaReviewController {
+@RequestMapping(BASE_URL + "/dramaReviews")
+public class DramaReviewController extends BaseController {
 
     private final DramaReviewService dramaReviewService;
     private final UserRepository userRepository;

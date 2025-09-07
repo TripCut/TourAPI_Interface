@@ -1,7 +1,9 @@
 package com.tripcut.domain.user.controller;
 
+import com.tripcut.core.controller.BaseController;
 import com.tripcut.domain.user.dto.LoginDto;
 import com.tripcut.domain.user.dto.MemberDto;
+import com.tripcut.domain.user.repository.UserRepository;
 import com.tripcut.domain.user.service.MemberService;
 import com.tripcut.global.security.jwt.TokenProvider;
 import com.tripcut.global.security.jwt.dto.TokenDto;
@@ -25,10 +27,11 @@ import static com.tripcut.global.common.api.ApiPath.BASE_URL;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(BASE_URL + "/member")
-public class MemberController {
+public class MemberController extends BaseController {
     private final MemberService memberService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
+    private final UserRepository userRepository;
 
     /** 회원가입 */
     @PostMapping("/signup")
@@ -45,7 +48,6 @@ public class MemberController {
 
     /** 관리자 전용 회원 조회 */
     @GetMapping("/{memberId}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<MemberDto> getMemberInfo(@PathVariable String memberId) {
         return ResponseEntity.ok(memberService.getUserWithAuthorities(memberId));
     }
@@ -78,7 +80,9 @@ public class MemberController {
     }
     @GetMapping("/info")
     public MemberDto readMyInfo(@RequestParam Long id){
-         return memberService.getMyInfo(id);
+        return userRepository.findById(id)
+                .map(MemberDto::from) // 엔티티 → DTO 변환 메서드 필요
+                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
     }
 
 }

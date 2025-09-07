@@ -1,7 +1,7 @@
 package com.tripcut.domain.user.controller;
 
+import com.tripcut.core.controller.BaseController;
 import com.tripcut.domain.user.dto.response.*;
-import com.tripcut.domain.user.entity.User;
 import com.tripcut.domain.user.service.AuthService;
 import com.tripcut.domain.user.util.UserConverter;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("")
-public class KakaoAuthController {
+public class KakaoAuthController extends BaseController {
 
     private final AuthService authService;
 
