@@ -17,7 +17,6 @@ public class TourCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String description;
     private Integer estimatedDuration; // 예상 소요 시간(분)

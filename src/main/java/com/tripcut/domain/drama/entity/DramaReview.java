@@ -1,5 +1,6 @@
 package com.tripcut.domain.drama.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tripcut.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;

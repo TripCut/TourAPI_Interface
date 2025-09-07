@@ -1,6 +1,7 @@
 package com.tripcut.domain.drama.service.impl;
 
 import com.tripcut.domain.drama.dto.DramaReviewCreateRequest;
+import com.tripcut.domain.drama.dto.DramaReviewDto;
 import com.tripcut.domain.drama.dto.DramaReviewUpdateRequest;
 import com.tripcut.domain.drama.entity.Drama;
 import com.tripcut.domain.drama.entity.DramaReview;
@@ -9,18 +10,25 @@ import com.tripcut.domain.drama.repository.DramaReviewRepository;
 import com.tripcut.domain.drama.service.DramaReviewService;
 import com.tripcut.domain.user.entity.User;
 import com.tripcut.domain.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class DramaReviewServiceImpl implements DramaReviewService {
+    private final ModelMapper modelMapper;
     private final DramaReviewRepository dramaReviewRepository;
     private final UserRepository userRepository;
     private final DramaRepository dramaRepository;
 
+    @Transactional
     @Override
     public DramaReview create(Long dramaId, Long userId, DramaReviewCreateRequest dramaReviewCreateRequest) {
         Drama drama = dramaRepository.findById(dramaId)
@@ -43,6 +51,7 @@ public class DramaReviewServiceImpl implements DramaReviewService {
         return dramaReviewRepository.save(dramaReview);
     }
 
+    @Transactional
     @Override
     public DramaReview update(Long reviewId, Long userId, DramaReviewUpdateRequest dramaReviewUpdateRequest) {
         DramaReview dramaReview = dramaReviewRepository.findById(reviewId)
@@ -59,6 +68,23 @@ public class DramaReviewServiceImpl implements DramaReviewService {
         return dramaReviewRepository.save(dramaReview);
     }
 
+    @Transactional
+    @Override
+    public List<DramaReviewDto> getAllReviews(Long dramaId) {
+        List<DramaReview> dramaReviews = dramaReviewRepository.findByDramaId(dramaId);
+        return dramaReviews.stream()
+                .map(review -> {
+                    DramaReviewDto dramaReviewDto = modelMapper.map(review, DramaReviewDto.class);
+                    dramaReviewDto.setDramaId(review.getDrama() != null ? review.getDrama().getId() : null);
+                    dramaReviewDto.setUserId(review.getUser() != null ? review.getUser().getId() : null);
+                    return dramaReviewDto;
+                })
+                .collect(Collectors.toList());
+
+    }
+
+
+    @Transactional
     @Override
     public void delete(Long reviewId, Long userId) {
         DramaReview dramaReview = dramaReviewRepository.findById(reviewId)
