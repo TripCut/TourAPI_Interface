@@ -12,7 +12,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Slf4j
 // 모든 rest컨트롤러에서 발생하는 예외 처리
-@RestControllerAdvice(basePackages = "com.moyang")
+@RestControllerAdvice(basePackages = "com.tripcut")
 public class GlobalExceptionHandler {
 
     // 지원되지 않는 HTTP 메소드를 사용할 때 발생하는 예외
