@@ -41,9 +41,14 @@ public enum ErrorCode {
      * */
     BOARD_NOT_FOUND(40400, HttpStatus.NOT_FOUND, "해당 게시글을 찾을 수 없습니다."),
     COMMENT_NOT_FOUND(40401, HttpStatus.NOT_FOUND, "해당 댓글을 찾을 수 없습니다."),
-    ALREADY_EXISTS(40402,HttpStatus.NOT_FOUND, "이미 좋아요를 눌렀습니다."),
-    LIKE_NOT_FOUND(40403,HttpStatus.NOT_FOUND, "좋아요가 존재하지 않습니다."),
-    FILE_NOT_FOUND(40404,HttpStatus.NOT_FOUND, "파일이 존재하지 않습니다."),
+    LIKE_NOT_FOUND(40402, HttpStatus.NOT_FOUND, "좋아요가 존재하지 않습니다."),
+    FILE_NOT_FOUND(40403, HttpStatus.NOT_FOUND, "파일이 존재하지 않습니다."),
+
+    /**
+     * 409(Conflict)
+     *   클라이언트의 요청이 서버의 현재 상태와 충돌했음을 의미합니다.
+     */
+    ALREADY_EXISTS(40900, HttpStatus.CONFLICT, "이미 좋아요를 눌렀습니다."),
     /**
      * 500(Internal Server Error)
      *   서버가 처리 방법을 모르는 상황이 발생했습니다. 서버는 아직 처리 방법을 알 수 없습니다.
