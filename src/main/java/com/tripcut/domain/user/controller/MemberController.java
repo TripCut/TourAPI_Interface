@@ -78,10 +78,10 @@ public class MemberController extends BaseController {
 
         return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
     }
-    @GetMapping("/info")
-    public MemberDto readMyInfo(@RequestParam Long id){
-        return userRepository.findById(id)
-                .map(MemberDto::from) // 엔티티 → DTO 변환 메서드 필요
+    @GetMapping("/info/{memberId}")
+    public MemberDto readMyInfo(@RequestParam Long memberId){
+        return userRepository.findById(memberId)
+                .map(MemberDto::from)
                 .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
     }
 

@@ -62,6 +62,13 @@ public class DramaServiceImpl implements DramaService {
 
     @Transactional
     @Override
+    public Page<DramaDto> searchByTitle(String title, Pageable pageable) {
+        return dramaRepository.findByTitleContainingIgnoreCase(title, pageable)
+                .map(dramaConverter::convertToDto);
+    }
+
+    @Transactional
+    @Override
     public DramaDto update(Long id, DramaUpdateRequest req) {
         Drama drama = dramaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Drama not found: " + id));
@@ -131,4 +138,3 @@ public class DramaServiceImpl implements DramaService {
         }
     }
 }
-

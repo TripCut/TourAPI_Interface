@@ -11,5 +11,6 @@ public interface DramaService {
     DramaDto update(Long id, DramaUpdateRequest dramaUpdateRequest);
     DramaDto read(Long id);
     Page<DramaDto> dramaPage(Pageable pageable);
+    Page<DramaDto> searchByTitle(String title, Pageable pageable);
     void delete(Long id);
 }
