@@ -44,9 +44,13 @@ public class DramaController extends BaseController {
     public ResponseEntity<Page<DramaDto>> list(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(required = false) String sort) {
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String title) {
 
             Pageable pageable = PageRequest.of(page, size, paginationSort.parseSort(sort));
+            if (title != null && !title.isBlank()) {
+                return ResponseEntity.ok(dramaService.searchByTitle(title, pageable));
+            }
             return ResponseEntity.ok(dramaService.dramaPage(pageable));
     }
 
