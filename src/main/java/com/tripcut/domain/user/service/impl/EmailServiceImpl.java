@@ -4,6 +4,7 @@ import com.tripcut.domain.user.entity.EmailMessage;
 import com.tripcut.domain.user.repository.EmailMessageRepository;
 import com.tripcut.domain.user.service.EmailService;
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,7 +24,6 @@ import java.util.UUID;
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
     private final EmailMessageRepository emailMessageRepository;
-    //    private final TemplateEngine templateEngine;  // Thymeleaf 템플릿 엔진
     @Autowired
     private SpringTemplateEngine templateEngine;
 
@@ -34,14 +36,14 @@ public class EmailServiceImpl implements EmailService {
         // 이메일 정보 저장
         EmailMessage emailMessage = new EmailMessage();
         emailMessage.setEmailRecipient(emailRecipient);
-        emailMessage.setEmailTitle("모양 이메일 인증");
+        emailMessage.setEmailTitle("TripCut 이메일 인증");
         emailMessage.setEmailContent("인증번호: " + authCode);
         emailMessage.setAuthCode(authCode);
         emailMessageRepository.save(emailMessage);
 
         // 이메일 전송
         try {
-            sendEmail(emailRecipient, "모양 이메일 인증", buildEmailContent(authCode));
+            sendEmail(emailRecipient, "TripCut 이메일 인증", buildEmailContent(authCode));
         } catch (MessagingException e) {
             throw new RuntimeException("이메일 전송 실패", e);
         }
@@ -52,9 +54,16 @@ public class EmailServiceImpl implements EmailService {
     /**
      * 이메일 전송 (HTML 지원)
      */
+
     private void sendEmail(String to, String subject, String content) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, StandardCharsets.UTF_8.name());
+
+        try {
+            helper.setFrom(new InternetAddress("alstjr6823@naver.com", "Tripcut", StandardCharsets.UTF_8.name()));
+        } catch (UnsupportedEncodingException e) {
+            throw new MessagingException("Failed to set From address", e);
+        }
 
         helper.setTo(to);
         helper.setSubject(subject);
@@ -62,6 +71,7 @@ public class EmailServiceImpl implements EmailService {
 
         mailSender.send(message);
     }
+
 
     public String buildEmailContent(String authCode) {
         Context context = new Context();

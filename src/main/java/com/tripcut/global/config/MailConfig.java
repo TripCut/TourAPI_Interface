@@ -22,11 +22,18 @@ public class MailConfig {
 
     @Value("${spring.mail.password}")
     private String password;
-    @Value("${spring.mail.properties.mail.smtp.auth}")
-    private String smtpAuth;
 
-    @Value("${spring.mail.properties.mail.smtp.starttls.enable}")
-    private String startTlsEnable;
+    @Value("${spring.mail.properties.mail.smtp.auth:true}")
+    private boolean smtpAuth;
+
+    @Value("${spring.mail.properties.mail.smtp.starttls.enable:false}")
+    private boolean startTlsEnable;
+
+    @Value("${spring.mail.properties.mail.smtp.ssl.enable:false}")
+    private boolean sslEnable;
+
+    @Value("${spring.mail.properties.mail.smtp.ssl.trust:}")
+    private String sslTrust;
 
     @Bean
     public JavaMailSender javaMailSender() {
@@ -37,8 +44,12 @@ public class MailConfig {
         mailSender.setPassword(password);
 
         Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.smtp.auth", smtpAuth);
-        props.put("mail.smtp.starttls.enable", startTlsEnable);
+        props.put("mail.smtp.auth", String.valueOf(smtpAuth));
+        props.put("mail.smtp.starttls.enable", String.valueOf(startTlsEnable));
+        props.put("mail.smtp.ssl.enable", String.valueOf(sslEnable));
+        if (sslTrust != null && !sslTrust.isBlank()) {
+            props.put("mail.smtp.ssl.trust", sslTrust);
+        }
 
         return mailSender;
     }

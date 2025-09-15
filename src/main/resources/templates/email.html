@@ -1,172 +1,31 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<!DOCTYPE html>
-<html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이메일 인증</title>
+    <style>
+        body { font-family: Arial, sans-serif; background:#f7f7f7; padding:24px; }
+        .card { max-width:520px; margin:0 auto; background:#ffffff; border:1px solid #e5e5e5; border-radius:8px; }
+        .header { background:#24292e; color:#ffffff; padding:16px 20px; border-radius:8px 8px 0 0; font-size:18px; font-weight:bold; }
+        .content { padding:20px; color:#333333; line-height:1.6; }
+        .code { display:inline-block; font-size:22px; font-weight:700; letter-spacing:2px; padding:10px 14px; background:#f0f4ff; border:1px dashed #6b7cff; border-radius:6px; margin:10px 0; }
+        .footer { padding:16px 20px; color:#666666; font-size:12px; border-top:1px solid #eee; border-radius:0 0 8px 8px; }
+    </style>
+    <!-- Thymeleaf template -->
+</head>
 <body>
-<table cellpadding="0" cellspacing="0" border="0" id="contentT" style="font-size: 12px; width: 100%">
-    <tbody>
-    <tr>
-        <td id="contentTC">
-            <div id="message-container">
-                <x-html lang="ko">
-                    <x-head>
-                        <x-meta charset="UTF-8">
-                            <x-meta name="viewport" content="width=640, initial-scale=1.0">
-                                <x-meta http-equiv="X-UA-Compatible" content="IE=edge">
-                                    <title>모두의 양도 플랫폼, 모양 이메일 인증 메일</title>
-                                </x-meta></x-meta></x-meta></x-head>
-                    <div style="margin: 0; padding: 0; font-style: normal; font-family: Noto Sans CJK KR, Apple SD Gothic Neo, serif; background-color: #fff; color: #222;">
-                        <table style="margin: 20px auto; text-align: left; border-collapse: collapse; border: 0; width: 640px; font-size: 14px; line-height: 1.5;">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <table
-                                            style="
-                              border-spacing: 0;
-                              border-collapse: collapse;
-                              width: 100%;
-                            "
-                                    >
-                                        <tbody>
-                                        <tr>
-                                            <td>
-                                                <h2 style="margin: 16px 0; font-size: 20px">
-                                                    <strong style="text-decoration: underline"
-                                                    >사용자</strong
-                                                    >님, 안녕하세요.
-                                                </h2>
-                                                <p style="font-size: 14px">
-                                                    <em
-                                                            style="
-                                        color: #3e69ff;
-                                        font-style: normal;
-                                        font-weight: bold;
-                                      "
-                                                    >모두의 양도, 모양</em
-                                                    >과 함께해주셔서 감사합니다.<br />
-                                                    사이트에서 인증번호를 입력해주세요.<br />
-                                                    감사합니다.
-                                                </p>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 48px 16px">
-                                    <table
-                                            style="
-                              border-spacing: 0;
-                              border-collapse: collapse;
-                              margin: 0;
-                              padding: 0;
-                              min-width: 100%;
-                              background-color: #f5f5f5;
-                            "
-                                    >
-                                        <colgroup>
-                                            <col width="150" />
-                                            <col width="*" />
-                                        </colgroup>
-                                        <tbody>
-                                        <tr>
-                                            <th style="padding: 16px">인증번호</th>
-                                            <td style="padding: 16px"><div style="font-size:150%" th:text="${authCode}"> </div></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 0">
-                                    <a
-                                            href="http://test.com"
-                                            style="
-                              display: block;
-                              padding: 8px 0;
-                              text-align: center;
-                              text-decoration: none;
-                              border: 0 solid #3e69ff;
-                              color: #fff;
-                              background-color: #3e69ff;
-                              width: 100%;
-                              border-radius: 5px;
-                            "
-                                            target="_blank"
-                                    >홈페이지로 이동하기</a
-                                    >
-                                </td>
-                            </tr>
-                            </tbody>
-                            <tfoot>
-                            <tr>
-                                <td style="padding-top: 40px" colspan="2">
-                                    <p
-                                            style="
-                              margin: 0;
-                              padding: 14px 16px;
-                              background: #f8f8fa;
-                              color: #9b9ba0;
-                              font-size: 12px;
-                            "
-                                    >
-                            <span
-                                    style="
-                                display: block;
-                                margin-bottom: 14px;
-                                padding-bottom: 14px;
-                                border-bottom: 1px solid #e6e8eb;
-                              "
-                            >
-                              본 메일은 발신전용으로 회신되지 않습니다. <br />
-                              문의사항이 있으시면 고객 센터를 이용해주시기
-                              바랍니다.
-                            </span>
-                                        <span style="display: inline-block; color: #3e69ff">
-                              <b style="margin-right: 6px; color: #9b9ba0"
-                              >전화 문의</b
-                              >
-                              010-3596-4517
-                            </span>
-                                        <span
-                                                style="display: inline-block; margin-left: 26px"
-                                        >
-                              <b style="margin-right: 6px; color: #9b9ba0"
-                              >메일 문의</b
-                              >
-                              <u>
-                                <a
-                                        target="_blank"
-                                        href="alstjr6823@naver.com"
-                                        style="color: #3e69ff"
-                                >
-                                  alstjr6823@naver.com
-                                </a>
-                              </u>
-                            </span>
-                                        <span
-                                                style="
-                                display: block;
-                                margin-top: 10px;
-                                color: #9b9ba0;
-                              "
-                                        >
-                              <b style="margin-right: 6px">전화 문의</b>
-                              평일 09:00~17:00 (주말 및 공휴일 제외/ 점심시간
-                              11:30~12:30)
-                            </span>
-                                    </p>
-                                </td>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </x-html>
-            </div>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<div class="card">
+    <div class="header">Tripcut 이메일 인증</div>
+    <div class="content">
+        <p>아래 인증번호를 회원가입 화면에 입력해 주세요.</p>
+        <div class="code">[[${authCode}]]</div>
+        <p>인증번호는 발송 시점으로부터 일정 시간 동안만 유효합니다.</p>
+    </div>
+    <div class="footer">
+        본 메일은 발신 전용입니다. 문의는 서비스 내 고객센터를 이용해 주세요.
+    </div>
+    </div>
 </body>
 </html>
+
