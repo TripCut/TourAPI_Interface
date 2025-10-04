@@ -23,6 +23,7 @@ public class Drama {
     private String genre;
     private String broadcastYear;
     private String broadcastStation;
+    private String imageURL;
     
     @OneToMany(mappedBy = "drama", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FilmingLocation> filmingLocations = new ArrayList<>();

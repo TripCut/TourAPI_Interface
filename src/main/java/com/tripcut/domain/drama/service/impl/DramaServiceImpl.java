@@ -10,11 +10,13 @@ import com.tripcut.domain.drama.service.DramaService;
 import com.tripcut.domain.drama.util.DramaConverter;
 import com.tripcut.domain.filmingLocation.entity.FilmingLocation;
 import com.tripcut.domain.filmingLocation.repository.FilmingLocationRepository;
+import com.tripcut.global.util.S3Uploader;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,20 +24,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DramaServiceImpl implements DramaService {
     private final DramaRepository dramaRepository;
-    private final FilmingLocationRepository filmingLocationRepository;
     private final DramaConverter dramaConverter;
+    private final S3Uploader s3Uploader;
 
     @Transactional
     @Override
-    public DramaDto create(DramaCreateRequest req) {
+    public DramaDto create(DramaCreateRequest req, MultipartFile posterFile) {
         if (dramaRepository.existsByTitle(req.getTitle())) {
             throw new IllegalArgumentException("이미 존재하는 제목입니다: " + req.getTitle());
+        }
+
+        String imageUrl = null;
+        if(posterFile != null && !posterFile.isEmpty()){
+            imageUrl = s3Uploader.upload(posterFile, "drama/posters");
         }
 
         Drama drama = new Drama();
         applyBasics(drama, req.getTitle(), req.getDescription(), req.getGenre(),
                 req.getBroadcastYear(), req.getBroadcastStation());
 
+        if(imageUrl != null)
+            drama.setImageURL(imageUrl);
         // 자식(촬영지) 생성/연결
         replaceCreateLocations(drama, req.getFilmingLocations());
 
