@@ -1,31 +1,27 @@
 package com.tripcut.domain.user.service;
 
 import com.tripcut.domain.user.dto.MemberDto;
+import com.tripcut.domain.user.dto.request.MemberUpdateRequest;
 import com.tripcut.domain.user.entity.User;
 import com.tripcut.domain.user.repository.UserRepository;
 import com.tripcut.global.common.exception.DuplicateMemberException;
 import com.tripcut.global.common.exception.NotFoundMemberException;
 import com.tripcut.global.security.jwt.SecurityUtil;
 import com.tripcut.global.security.jwt.entity.Authority;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
+import java.util.NoSuchElementException;
 
 @Service
 public class MemberService {
     private final UserRepository memberRepository;
-
-//    private final MemberMapper memberMapper;
-
     private final PasswordEncoder passwordEncoder;
 
-    //    public MemberService(MemberRepository memberRepository, MemberMapper memberMapper, PasswordEncoder passwordEncoder) {
-//        this.memberRepository = memberRepository;
-//        this.memberMapper = memberMapper;
-//        this.passwordEncoder = passwordEncoder;
-//    }
     public MemberService(UserRepository memberRepository,  PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
@@ -52,7 +48,12 @@ public class MemberService {
                 .badges(memberDto.getBadges())
                 .build();
 
-        return MemberDto.from(memberRepository.save(user));
+        try {
+            return MemberDto.from(memberRepository.save(user));
+        } catch (DataIntegrityViolationException e) {
+            // email/ memberId 유니크 충돌 등
+            throw new DuplicateMemberException("이미 가입되어 있는 계정 정보입니다.");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -69,16 +70,20 @@ public class MemberService {
         );
     }
 
-//    public MemberDto getMemberById(String memberNo) {
-//        // 파라미터를 HashMap으로 준비
-//        Map<String, Object> parameters = new HashMap<>();
-//        parameters.put("memberNo", memberNo);
-//        return memberMapper.findByMemberId(parameters);
-//    }
-//    public MemberDto getMyInfo(Long id){
-//        MemberDto memberDto = UserRepository.findById(id)
-//                .map(memberDto)
-//        return memberDto;
-//    }
+    @Transactional
+    public User updateMemberInfo(MemberUpdateRequest memberUpdateRequest){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //System.out.println("name: "+authentication.getName()); => memberId
+        Long id = memberRepository.findIdByMemberId(authentication.getName());
+        User user = memberRepository.findById(id)
+                .orElseThrow(()->new NoSuchElementException("해당 회원을 찾을 수 없습니다. id=" + id));
+        user.setMemberPw(passwordEncoder.encode(memberUpdateRequest.getMemberPw()));
+        user.setName(memberUpdateRequest.getName());
+        user.setPreferredLanguage(memberUpdateRequest.getPreferredLanguage());
+        user.setPreferredGenres(memberUpdateRequest.getPreferredGenres());
+        user.setBadges(memberUpdateRequest.getBadges());
+        return memberRepository.save(user);
+    }
+
 
 }

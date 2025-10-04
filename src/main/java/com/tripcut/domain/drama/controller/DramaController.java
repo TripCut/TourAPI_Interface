@@ -1,5 +1,6 @@
 package com.tripcut.domain.drama.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tripcut.core.controller.BaseController;
 import com.tripcut.domain.drama.dto.DramaCreateRequest;
 import com.tripcut.domain.drama.dto.DramaDto;
@@ -10,8 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 import static com.tripcut.global.common.api.ApiPath.BASE_URL;
 
@@ -23,10 +28,16 @@ public class DramaController extends BaseController {
     private final DramaService dramaService;
     private final PaginationSort paginationSort;
 
-    @PostMapping
-    private ResponseEntity<?> createDrama(@RequestBody DramaCreateRequest createDramaDto){
-       dramaService.create(createDramaDto);
-       return ResponseEntity.ok("등록 완료");
+
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> createDrama(
+            @RequestPart("request") String requestJson,  // 예시 입력값 README 참고
+            @RequestPart(value = "image", required = false) MultipartFile posterFile
+    ) throws IOException {
+        DramaCreateRequest request = new ObjectMapper().readValue(requestJson, DramaCreateRequest.class);
+        DramaDto created = dramaService.create(request, posterFile);
+        return ResponseEntity.ok(created);
     }
 
     @PutMapping("/{id}")

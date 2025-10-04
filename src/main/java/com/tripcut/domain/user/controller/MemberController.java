@@ -3,6 +3,8 @@ package com.tripcut.domain.user.controller;
 import com.tripcut.core.controller.BaseController;
 import com.tripcut.domain.user.dto.LoginDto;
 import com.tripcut.domain.user.dto.MemberDto;
+import com.tripcut.domain.user.dto.request.MemberUpdateRequest;
+import com.tripcut.domain.user.entity.User;
 import com.tripcut.domain.user.repository.UserRepository;
 import com.tripcut.domain.user.service.MemberService;
 import com.tripcut.global.security.jwt.TokenProvider;
@@ -84,5 +86,11 @@ public class MemberController extends BaseController {
                 .map(MemberDto::from)
                 .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
     }
+
+    @PutMapping("/updateInfo")
+    public User updateMyINfo(@RequestBody MemberUpdateRequest memberUpdateRequest){
+        return memberService.updateMemberInfo(memberUpdateRequest);
+    }
+
 
 }

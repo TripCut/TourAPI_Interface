@@ -15,4 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
 
     Optional<User> findOneWithAuthoritiesByMemberId(String memberId);
-} 
+
+    @Query("select u.id from User u where u.memberId = :memberId")
+    Long findIdByMemberId(String memberId);
+}

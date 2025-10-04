@@ -126,3 +126,16 @@ docker-compose down
 - 프로덕션 환경에서는 보안 설정을 적절히 구성해야 합니다.
 - 로그 보관 기간과 저장소 크기를 모니터링하고 관리해야 합니다.
 - 메트릭 수집 간격과 보관 기간을 환경에 맞게 조정해야 합니다. 
+
+
+### 입력 예시
+POST api/v1/dramas
+{
+"title":"My Drama1",
+"description":"desc",
+"genre":"romance",
+"broadcastYear":"2024",
+"broadcastStation":"KBS",
+"filmingLocations":[{"name":"LOC1","address":"ADDR","lat":37.1,"lng":127.1}],
+"tags":["tag1","tag2"]
+}
