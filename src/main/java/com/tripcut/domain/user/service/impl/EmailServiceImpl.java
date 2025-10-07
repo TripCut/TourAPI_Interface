@@ -8,6 +8,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,14 +26,20 @@ import java.util.UUID;
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
     private final EmailMessageRepository emailMessageRepository;
-    @Autowired
-    private SpringTemplateEngine templateEngine;
+    private final SpringTemplateEngine templateEngine;
+    private final StringRedisTemplate redisTemplate;
 
-    /**
-     * 이메일 인증 요청 (이메일 저장 + 전송)
-     */
+    public static final String KEY_PREFIX="authCode:";
+    public static final String VERIFIED_PREFIX = "verified:";
+    public static final Duration AUTH_TTL = Duration.ofMinutes(3);
+
+    public static final Duration VERIFIED_TTL = Duration.ofSeconds(185);
+
+
     public String sendVerificationEmail(String emailRecipient) {
-        String authCode = UUID.randomUUID().toString().substring(0, 6); // 6자리 인증번호 생성
+        String authCode = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+
+        saveAuthCode(emailRecipient, authCode);
 
         // 이메일 정보 저장
         EmailMessage emailMessage = new EmailMessage();
@@ -50,10 +58,17 @@ public class EmailServiceImpl implements EmailService {
 
         return authCode;
     }
+    private String buildVerifiedKey(String email) {
+        return VERIFIED_PREFIX + email.trim().toLowerCase();
+    }
 
-    /**
-     * 이메일 전송 (HTML 지원)
-     */
+    private void saveAuthCode(String email, String code) {
+        String key = buildKey(email);
+        redisTemplate.opsForValue().set(key, code, AUTH_TTL);
+    }
+    private String buildKey(String email){
+        return KEY_PREFIX+email.trim().toLowerCase();
+    }
 
     private void sendEmail(String to, String subject, String content) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
@@ -72,20 +87,36 @@ public class EmailServiceImpl implements EmailService {
         mailSender.send(message);
     }
 
+    public boolean isEmailVerified(String email) {
+        return redisTemplate.opsForValue().get(buildVerifiedKey(email)) != null;
+    }
+
+    public void clearEmailVerified(String email) {
+        redisTemplate.delete(buildVerifiedKey(email));
+    }
 
     public String buildEmailContent(String authCode) {
         Context context = new Context();
         context.setVariable("authCode", authCode);
+        System.out.println("authCode :"+ authCode);
 
         return templateEngine.process("email", context);
     }
 
-    /**
-     * 인증 코드 검증
-     */
+
     public boolean verifyCode(String email, String code) {
-        Optional<EmailMessage> emailMessageOpt = emailMessageRepository.findByEmailRecipientAndAuthCode(email, code);
-        return emailMessageOpt.isPresent();
+        String key = buildKey(email);
+        String saved = redisTemplate.opsForValue().get(key);
+        boolean matched = saved != null && saved.equals(code);
+        if (matched){
+            redisTemplate.delete(key);
+            if (VERIFIED_TTL != null) {
+                redisTemplate.opsForValue().set(buildVerifiedKey(email), "1", VERIFIED_TTL);
+            } else {
+                redisTemplate.opsForValue().set(buildVerifiedKey(email), "1");
+            }
+        }
+        return matched;
     }
 }
 

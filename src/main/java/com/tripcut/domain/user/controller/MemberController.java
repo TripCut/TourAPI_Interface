@@ -4,17 +4,21 @@ import com.tripcut.core.controller.BaseController;
 import com.tripcut.domain.user.dto.LoginDto;
 import com.tripcut.domain.user.dto.MemberDto;
 import com.tripcut.domain.user.dto.request.MemberUpdateRequest;
+import com.tripcut.domain.user.dto.request.SignupRequest;
+import com.tripcut.domain.user.dto.request.VerifyRequest;
+import com.tripcut.domain.user.dto.response.VerifyResponse;
 import com.tripcut.domain.user.entity.User;
 import com.tripcut.domain.user.repository.UserRepository;
-import com.tripcut.domain.user.service.MemberService;
+import com.tripcut.domain.user.service.EmailService;
+import com.tripcut.domain.user.service.impl.MemberServiceImpl;
 import com.tripcut.global.security.jwt.TokenProvider;
 import com.tripcut.global.security.jwt.dto.TokenDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -30,16 +34,25 @@ import static com.tripcut.global.common.api.ApiPath.BASE_URL;
 @RequiredArgsConstructor
 @RequestMapping(BASE_URL + "/member")
 public class MemberController extends BaseController {
-    private final MemberService memberService;
+    private final MemberServiceImpl memberService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;
+    private final EmailService emailService;
 
-    /** 회원가입 */
-    @PostMapping("/signup")
-    public ResponseEntity<MemberDto> signup(@Valid @RequestBody MemberDto memberDto) {
-        return ResponseEntity.ok(memberService.signup(memberDto));
+    @PostMapping("/email/verify")
+    public ResponseEntity<VerifyResponse> verifyEmailCode(@Valid @RequestBody VerifyRequest req) {
+        boolean verified = emailService.verifyCode(req.getEmail().trim(), req.getCode().trim());
+        return ResponseEntity.ok(new VerifyResponse(verified));
     }
+    @PostMapping("/signup")
+    public ResponseEntity<MemberDto> signup(@Valid @RequestBody SignupRequest req) {
+        // 검증 + 가입
+        MemberDto saved = memberService.signup(req.getMember());
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    }
+
+
 
     /** 회원 전용 회원 리스트 조회 */
 //    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
@@ -91,6 +104,5 @@ public class MemberController extends BaseController {
     public User updateMyINfo(@RequestBody MemberUpdateRequest memberUpdateRequest){
         return memberService.updateMemberInfo(memberUpdateRequest);
     }
-
 
 }
