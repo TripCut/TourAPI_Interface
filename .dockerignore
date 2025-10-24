@@ -1,0 +1,51 @@
+# Build directories
+.gradle
+build/
+target/
+out/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Logs
+log/
+*.log
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# Documentation
+README.md
+*.md
+
+# Environment
+.env
+
+# Monitoring configs
+prometheus/
+grafana/
+loki/
+promtail/
+k6/
+
+# Scripts
+script/
+
+# Test files
+src/test/
+
+# Gradle wrapper (keeping it for build)
+# gradlew
+# gradlew.bat
+# gradle/

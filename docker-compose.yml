@@ -1,6 +1,79 @@
 version: '3.8'
 
 services:
+  # Application Services
+  mariadb:
+    image: mariadb:11.4
+    container_name: tripcut-mariadb
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: 1234
+      MARIADB_DATABASE: tripcut
+      MARIADB_USER: tripcut
+      MARIADB_PASSWORD: 1234
+      TZ: Asia/Seoul
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - app-network
+      - monitoring
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+
+  redis:
+    image: redis:7-alpine
+    container_name: tripcut-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+      - monitoring
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tripcut-app
+    ports:
+      - "80:8080"
+    env_file:
+      - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/tripcut
+      SPRING_DATASOURCE_USERNAME: tripcut
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      CLOUD_AWS_CREDENTIALS_ACCESS_KEY: ${S3_ACCESSKEY}
+      CLOUD_AWS_CREDENTIALS_SECRET_KEY: ${S3_SECRETKEY}
+      CLOUD_AWS_S3_BUCKET: ${S3_BUCKETNAME}
+    volumes:
+      - ./log:/var/log/spring-boot
+    networks:
+      - app-network
+      - monitoring
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Monitoring Services
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -11,7 +84,10 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
     networks:
+      - app-network
       - monitoring
+    depends_on:
+      - app
 
   grafana:
     image: grafana/grafana:latest
@@ -96,10 +172,14 @@ services:
     command: run /scripts/load-test.js
 
 networks:
+  app-network:
+    driver: bridge
   monitoring:
     driver: bridge
 
 volumes:
+  mariadb-data:
+  redis-data:
   grafana-storage:
   influxdb-storage:
   k6-results: 
